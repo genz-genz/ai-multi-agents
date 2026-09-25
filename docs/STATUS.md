@@ -1,37 +1,35 @@
 # Project Status
 
-> อ่านทุก session · **สั้น** · single-writer ต่อรอบ
+> คัดลอกเป็น `docs/STATUS.md` ใน Lab 00 · อ่านทุก session · **สั้น** · single-writer ต่อรอบ  
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-24 +07:00
-Updated by: Claude
+Last updated: YYYY-MM-DD HH:mm +07:00  
+Updated by: human | Claude | OpenCode
 
 ## Current goal
 
-- Lab 01: สัมภาษณ์เจ้าของเว็บ แล้วเขียน `docs/PROFILE.md` (เสร็จแล้ว)
+- (หนึ่งประโยค — Lab / ผลลัพธ์ที่กำลังทำ)
 
 ## Done
 
-- Lab 00 project init
-- Lab 01: เขียน `docs/PROFILE.md` จากการสัมภาษณ์ (9 คำถาม) และเพิ่ม section `## Privacy`
+- 
 
 ## In progress
 
-- —
+- 
 
 ## Blocked
 
-- —
+- (ไม่มี = เขียน `—`)
 
 ## Next actions
 
-1. Lab 02 Debate (Brand / UX / Devil subagents) อ่าน `docs/PROFILE.md`
-2. เคารพ `## Privacy` ใน PROFILE ตอนทำ UI (Lab 04)
+1. 
+2. 
 
 ## Files changed in latest session
 
-- `docs/PROFILE.md`
-- `docs/STATUS.md`
+- 
 
 ## Notes
 
