@@ -53,6 +53,8 @@
 
 ## 4. คำถามถึง frontend (ต้องตอบก่อน Lab 05)
 
+> **อัปเดต 2026-09-25:** ทั้ง 3 ข้อถูกตอบแล้ว — Claude ยืนยันใน [`docs/handoffs/04-claude-to-opencode.md`](handoffs/04-claude-to-opencode.md) §3: (1) `created_at` = ISO 8601 UTC ตกลง (2) เช็กลิงก์ทั้ง `name` + `message` ตรงกับ UI · server pattern ครอบกว้างกว่าได้ (3) ไม่ต้องใส่ `Retry-After` ใน v1 → ข้อสรุปข้างล่างคงไว้เป็นหลักฐานการตกลงครั้งแรก
+
 1. **ฟอร์แมต `created_at`:** SQLite `datetime('now')` ให้ `YYYY-MM-DD HH:MM:SS` (UTC แต่ไม่มี Z) — `new Date()` ของบาง browser parse แบบนี้เป็น local time หรือพัง (Safari) ทำให้ `formatDate` คืนค่าว่าง/วันที่คลาด · backend เสนอคืนเป็น **ISO 8601 UTC** (`new Date().toISOString()` → `2026-09-25T10:00:00.000Z`) ตอน insert · frontend รับฟอร์แมตนี้โอเคไหม (`toLocaleDateString('th-TH')` น่าจะทำงานปกติ)?
 2. **เช็กลิงก์ในชื่อด้วยไหม:** UI เช็ก `LINK_PATTERN` ทั้ง `name` และ `message` · D4 พูดถึง "ข้อความ" แต่ backend จะทำตาม UI (เช็กทั้งคู่ → `INVALID_LINK`) — ยืนยันว่าตรงกัน?
 3. **`Retry-After` บน 429:** ตอนนี้ UI แสดงข้อความคงที่ ไม่อ่าน header — backend เลยจะ**ไม่ใส่** `Retry-After` ถ้า frontend ไม่ต้องการ · โอเคไหม หรืออยากเอาไว้ทำ countdown ภายหลัง?
