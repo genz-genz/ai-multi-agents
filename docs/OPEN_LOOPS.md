@@ -3,11 +3,10 @@
 > งานค้างที่ยังไม่ปิด · ลบแถวเมื่อเสร็จ  
 > Owner = `Claude` | `OpenCode` | `human`
 
-Last updated: 2026-09-25 15:55 +07:00
+Last updated: 2026-09-25 16:05 +07:00
 
 | ID | Task | Owner | Priority | Trigger / due | Notes |
 |---|---|---|---|---|---|
-| L13 | e2e เคส XSS seed ด้วย XFF ปลอม → L12 ปิดแล้ว วิธี seed เดิมใช้ไม่ได้ · หาวิธี seed ใหม่ (SWARM G5) | Claude | P3 | Lab 06 | `playwright/guestbook.spec.ts` · L12 ปิดแล้ว (2026-09-25) seed ผ่าน XFF ปลอมไม่ได้อีก |
 | L14 | `stash@{0}` = งาน OpenCode บน `main` (db.ts อีกชุด · SWARM/STATUS/OPEN_LOOPS · `opencode.json`) — ทิ้งหรือดึงบางไฟล์กลับ | human | P2 | ก่อน merge | SWARM G4 |
 | L8 | Warm-up หลัง deploy: เพิ่ม `HEALTHCHECK` ใน `Dockerfile` ยิง `/` ด้วย `node -e "fetch(...)"` (image อาจไม่มี curl) → คนแรกหลัง restart เห็นการ์ดเพลง · ไม่ใช้ webhook/secret | Claude | P3 | Lab 08 | human เลือกทางเลือก 1 (2026-09-25) · ที่มา `docs/handoffs/05c-opencode-to-claude.md` · **D12: หน้าแรกไม่ใช้ชาร์ตแล้ว → อาจไม่ต้องทำ (ปิดพร้อม L11)** |
 | L11 | `src/lib/music.ts` + `tests/music.test.ts` ไม่มีหน้าไหนเรียกแล้วหลัง D12 → เก็บไว้เผื่อใช้ หรือลบ (ถ้าลบ L8 ปิดได้เลย) | human → OpenCode | P3 | ก่อน Lab 08 | ไฟล์เป็นของ OpenCode · Claude ไม่ลบเอง |
@@ -16,6 +15,7 @@ Last updated: 2026-09-25 15:55 +07:00
 
 | ID | Task | Closed |
 |---|---|---|
+| L13 | e2e เคส XSS: รัน server e2e ด้วย `TRUST_PROXY=1` (เหมือน prod) แล้ว seed เป็นผู้ชมอีก IP · ไม่มี env = skip (พิสูจน์ว่า XFF ปลอมข้าม rate limit ไม่ได้แล้ว) · `test:e2e` 6/6 | 2026-09-25 |
 | L12 | Rate limit ข้ามด้วย XFF ปลอม + เพดาน body — `clientIp()` เชื่อ XFF ตัวท้ายสุดเฉพาะ `TRUST_PROXY=1` (ตั้งใน Coolify env ตอน Lab 08 · ไม่ใส่ Dockerfile) · body ≤ 10KB → 400 INVALID_INPUT · `tests/guestbook-ip.test.ts` 4 เคส (RED→GREEN) · `npm test` 33/33 · test:labs 2/2 · build ผ่าน · handoff `05d-opencode-to-claude.md` | 2026-09-25 |
 | L1 | สร้าง STATUS + OPEN_LOOPS จาก example | 2026-09-25 |
 | L2 | แก้ regex `profile.ts` อ่าน section หลายบรรทัด + `tests/profile.test.ts` (commit `a1c7320`) | 2026-09-25 |

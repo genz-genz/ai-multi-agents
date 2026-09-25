@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 // Guestbook contract end to end (D4 / D9). Run against a server with a fresh
-// DATA_DIR: the in-memory rate limit (1 post/min/IP) makes these cases
-// order-dependent, so they run serially in one worker.
+// DATA_DIR and TRUST_PROXY=1 (as in production behind Coolify): the in-memory
+// rate limit (1 post/min/IP) makes these cases order-dependent, so they run
+// serially in one worker.
 test.describe.configure({ mode: 'serial' });
 
 const stamp = Date.now().toString(36);
@@ -38,13 +39,13 @@ test('validation runs before the rate limit', async ({ request }) => {
 });
 
 test('visitor HTML is shown as text, never executed', async ({ page, request }) => {
-  // Seed through the API from a different forwarded address so the rate limit
-  // does not block it. Skips itself once L12 stops trusting spoofed headers.
+  // Seed as a different visitor: with TRUST_PROXY=1 the last X-Forwarded-For
+  // entry is the client address (L12), so a fresh one gets its own rate window.
   const seeded = await request.post('/api/guestbook', {
     headers: { 'x-forwarded-for': `10.9.${Math.floor(Math.random() * 250)}.1` },
     data: { name: '<b>แขก</b>', message: XSS_MESSAGE },
   });
-  test.skip(seeded.status() === 429, 'rate limit no longer trusts x-forwarded-for (L12) — seed another way');
+  test.skip(seeded.status() === 429, 'server not started with TRUST_PROXY=1 — cannot seed as a second visitor');
   expect(seeded.status()).toBe(201);
 
   await page.goto('/guestbook');

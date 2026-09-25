@@ -91,3 +91,28 @@
 | G1 / L12 | XFF ปลอมข้าม rate limit + ไม่มีเพดาน body — **handoff แล้ว** `05d-claude-to-opencode.md` | OpenCode |
 | G5 | เคส XSS ใน e2e ใช้ XFF ปลอมเพื่อเลี่ยง rate limit → หลัง L12 จะ **skip** ตัวเอง (ไม่แดง) · ต้องหาวิธี seed ใหม่ (เช่น รันหลังพ้นหน้าต่าง 60s หรือ seed ผ่าน SQLite ก่อนเปิด server) | Claude (Lab 06) |
 | G4 / L14 | `stash@{0}` บน `main` ยังรอตัดสิน | human |
+
+---
+
+# รอบ 3 — สั่ง OpenCode implement (human อนุมัติ)
+
+> 2026-09-25 · Claude เรียก `opencode run --agent backend` ให้ทำตาม handoff `05d-claude-to-opencode.md` · prompt จำกัดไฟล์ที่แก้ได้ (ownership OpenCode เท่านั้น) · Claude ไม่แตะ working tree ระหว่างรอ
+
+| Turn | งาน |
+|---|---|
+| 1 | เขียน prompt (ไฟล์ที่แตะได้ 6 ไฟล์ · TDD · commit บน `lab-05-backend`) |
+| 2–3 | `opencode run` ล้ม 2 ครั้ง — `provider.rate-limit` 429 (ตรวจด้วย `--format json`) · ไม่มีไฟล์เปลี่ยน |
+| 4 | retry สำเร็จ — OpenCode commit `71f37fe` (fix) + `8b5d739` (handoff กลับ) · RED 3/4 → GREEN 4/4 |
+| 5 | Claude ตรวจ: diff แตะเฉพาะไฟล์ที่อนุญาต · `npm test` 33/33 · `test:labs` 2/2 · build ผ่าน |
+| 6 | L13: e2e server ใช้ `TRUST_PROXY=1` (เหมือน prod) · มี env → 6/6 · ไม่มี env → เคส XSS skip = หลักฐาน e2e ว่า XFF ปลอมใช้ไม่ได้แล้ว |
+| 7 | อัปเดต STATUS / OPEN_LOOPS (ปิด L13) + ไฟล์นี้ · commit |
+
+**รวม 7 / 20 turns — done**
+
+## Gaps คงเหลือ
+
+| ID | ช่องว่าง | Owner |
+|---|---|---|
+| L14 | `stash@{0}` บน `main` | human |
+| — | Lab 08 ต้องตั้ง `TRUST_PROXY=1` ใน Coolify env และพิสูจน์ว่า proxy append XFF 1 hop | Lab 08 |
+| — | เพดาน body เช็กหลัง buffer · เพดานระดับ stream = reverse proxy | Lab 08 |
