@@ -3,15 +3,16 @@
 > อ่านทุก session · **สั้น** · single-writer ต่อรอบ  
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 13:45 +07:00  
+Last updated: 2026-09-25 13:51 +07:00  
 Updated by: Claude
 
 ## Current goal
 
-- Lab 02 เสร็จ (`DECISIONS.md` D1–D10) → ถัดไป Lab 03 วางแผน issues / Lab 04 frontend ตาม DECISIONS
+- Lab 04 frontend เสร็จ (PR `lab-04-frontend`) → ถัดไป Lab 05 backend (OpenCode · L10)
 
 ## Done
 
+- **L9 / Lab 04 UI เสร็จ** (Claude · `2a3063e`): 3 หน้าเมนูไทย (`/interests` `/contact` → 301) · หน้าแรก headline/tagline/ประโยคสุ่ม/การ์ดเพลง · หน้าทักทาย (limit + microcopy + `textContent`) · ธีมขาว my-ci · `npm test` 29/29 · build ผ่าน · 360px ไม่ล้น · สัญญา API ตรวจโดย OpenCode → `docs/fe-be-contract-check.md`
 - **L5 / Lab 02 เสร็จ** (2026-09-25): `docs/DEBATE.md` 3 มุม + `docs/DECISIONS.md` D1–D10 · human เลือก: 3 หน้าเมนูไทย · ตัดฟอร์ม Contact · rate limit IP ใน memory · เจ้าของลบข้อความเองภายใน 24 ชม. · PROFILE เพิ่ม `## Tagline`
 - **L7 ปิด** (2026-09-25): ชาร์ตว่างเข้า backoff (OpenCode `f36b393`) · Claude ยืนยันว่า Astro โหลด page แบบ lazy จึงทำ boot warm-up ใน app ไม่ได้ · human เลือกยอมรับไปก่อน → แก้ตอน deploy (L8)
 - Lab 01 เสร็จ: `docs/PROFILE.md` ครบโครง + `## Brainstorm`
@@ -24,7 +25,7 @@ Updated by: Claude
 
 ## In progress
 
-- —
+- L10 ส่ง OpenCode แล้ว → `docs/handoffs/04-claude-to-opencode.md`
 
 ## Blocked
 
@@ -32,15 +33,15 @@ Updated by: Claude
 
 ## Next actions
 
-1. Lab 04 frontend ตามเกณฑ์ใน `DECISIONS.md` (L9 · Claude)
-2. เขียน handoff Lab 05 ให้ OpenCode ตาม D3–D5 (L10)
+1. OpenCode: Lab 05 guestbook API (L10) — ถาม human เรื่อง `/api/contact` 404 vs 410 ก่อน
+2. Human: review + merge PR Lab 04
 3. Lab 08: HEALTHCHECK warm การ์ดเพลง (L8)
 
 ## Files changed in latest session
 
-- `docs/DEBATE.md` (commit ครั้งแรก) · `docs/DECISIONS.md` (ใหม่)
-- `docs/PROFILE.md` (`## Tagline`)
-- `docs/STATUS.md` · `docs/OPEN_LOOPS.md`
+- `src/layouts/BaseLayout.astro` · `src/pages/{index,about,guestbook,interests,contact}.astro` · `src/styles/tokens.css` (ใหม่)
+- `src/lib/profile.ts` (`tagline`) · `src/lib/tagline.ts` · `tests/profile.test.ts` · `tests/tagline.test.ts` · `.gitignore`
+- `docs/fe-be-contract-check.md` (OpenCode) · `docs/handoffs/04-claude-to-opencode.md` · `docs/STATUS.md` · `docs/OPEN_LOOPS.md`
 
 ## Notes
 
