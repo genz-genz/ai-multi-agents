@@ -3,15 +3,16 @@
 > อ่านทุก session · **สั้น** · single-writer ต่อรอบ  
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 13:29 +07:00  
+Last updated: 2026-09-25 13:45 +07:00  
 Updated by: Claude
 
 ## Current goal
 
-- Lab 02: ย้ายข้อเสนอจาก `## Brainstorm` เข้า debate → ปิดเป็น D-id ใน `DECISIONS.md` (ฝั่ง Claude) · L2 + L3 + L4 + L6 ปิดแล้ว · L7 ข้อ 2 เสร็จ ข้อ 1 รอ decision
+- Lab 02 เสร็จ (`DECISIONS.md` D1–D10) → ถัดไป Lab 03 วางแผน issues / Lab 04 frontend ตาม DECISIONS
 
 ## Done
 
+- **L5 / Lab 02 เสร็จ** (2026-09-25): `docs/DEBATE.md` 3 มุม + `docs/DECISIONS.md` D1–D10 · human เลือก: 3 หน้าเมนูไทย · ตัดฟอร์ม Contact · rate limit IP ใน memory · เจ้าของลบข้อความเองภายใน 24 ชม. · PROFILE เพิ่ม `## Tagline`
 - **L7 ปิด** (2026-09-25): ชาร์ตว่างเข้า backoff (OpenCode `f36b393`) · Claude ยืนยันว่า Astro โหลด page แบบ lazy จึงทำ boot warm-up ใน app ไม่ได้ · human เลือกยอมรับไปก่อน → แก้ตอน deploy (L8)
 - Lab 01 เสร็จ: `docs/PROFILE.md` ครบโครง + `## Brainstorm`
 - **L3 เพลงสุ่ม ฝั่ง server เสร็จ** (OpenCode · 2026-09-25): `src/lib/music.ts` — cache TTL 1 ชม. · stale-on-error · timeout 3s · validate `music.apple.com` URL · ไม่ throw (พัง = `null`) · `npm test` 15/15 + `npm run build` ผ่าน · สเปก/สัญญาใน `docs/handoffs/05-claude-to-opencode.md` · ส่งกลับที่ `docs/handoffs/05-opencode-to-claude.md`
@@ -31,16 +32,15 @@ Updated by: Claude
 
 ## Next actions
 
-1. Lab 02: ย้ายข้อเสนอจาก `## Brainstorm` ไป debate → ปิดเป็น D-id ใน `DECISIONS.md` (L5 · Claude)
-2. Lab 08: `HEALTHCHECK` ยิง `/` เพื่อ warm การ์ดเพลงหลัง deploy (L8)
+1. Lab 04 frontend ตามเกณฑ์ใน `DECISIONS.md` (L9 · Claude)
+2. เขียน handoff Lab 05 ให้ OpenCode ตาม D3–D5 (L10)
+3. Lab 08: HEALTHCHECK warm การ์ดเพลง (L8)
 
 ## Files changed in latest session
 
-- `src/lib/music.ts` (L7 ข้อ 2: ชาร์ตว่าง → backoff · เพิ่ม `warmUpChart()` export)
-- `tests/music.test.ts` (ขยาย 13 → 14 tests: backoff ชาร์ตว่าง + ไม่ทับ stale cache)
-- `docs/handoffs/05c-opencode-to-claude.md` (ใหม่)
+- `docs/DEBATE.md` (commit ครั้งแรก) · `docs/DECISIONS.md` (ใหม่)
+- `docs/PROFILE.md` (`## Tagline`)
 - `docs/STATUS.md` · `docs/OPEN_LOOPS.md`
-- `src/middleware.ts` สร้างแล้วลบ (พิสูจน์ว่าไม่ช่วย) · `astro.config.mjs` ลองแก้แล้ว revert = ไม่มี diff
 
 ## Notes
 
