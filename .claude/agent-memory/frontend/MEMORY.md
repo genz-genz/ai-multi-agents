@@ -1,0 +1,2 @@
+- [Site IA and UI rules](project_site_ia_and_ui_rules.md) — 3-page Thai nav (D2), no Contact (D3), my-ci light tokens, guestbook textContent
+- [Single-writer hot state](feedback_single_writer_hot_state.md) — check latest handoff before touching STATUS/OPEN_LOOPS; writer is OpenCode after Lab 04

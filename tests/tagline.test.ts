@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { pickTagline, TEMPLATES } from '../src/lib/tagline';
+import { loadProfile } from '../src/lib/profile';
 
 const INTERESTS = ['ฟังเพลง', 'นั่งเฉย ๆ', 'ทำตัวเหมือนยุ่ง'];
 
@@ -37,6 +38,27 @@ describe('pickTagline', () => {
   it('puts a space after ๆ when text follows', () => {
     // template 0 = 'วันนี้ขอ{a}ไปก่อน'
     expect(pickTagline(['นั่งเฉย ๆ'], seq(0, 0))).toBe('วันนี้ขอนั่งเฉย ๆ ไปก่อน');
+  });
+
+  it('every template × every interest pair from PROFILE.md reads cleanly (D7)', () => {
+    const interests = loadProfile().interests;
+    const n = interests.length;
+    const lines = new Set<string>();
+    for (let t = 0; t < TEMPLATES.length; t++) {
+      for (let a = 0; a < n; a++) {
+        for (let k = 0; k < Math.max(n - 1, 1); k++) {
+          lines.add(
+            pickTagline(interests, seq((t + 0.5) / TEMPLATES.length, (a + 0.5) / n, (k + 0.5) / Math.max(n - 1, 1))),
+          );
+        }
+      }
+    }
+    for (const line of lines) {
+      expect(line).not.toMatch(/[{}]/);
+      expect(line).not.toMatch(/\s{2,}/);
+      expect(line).toBe(line.trim());
+    }
+    expect(lines.size).toBeGreaterThan(TEMPLATES.length);
   });
 
   it('falls back to a fixed line when there are no interests', () => {

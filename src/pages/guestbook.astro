@@ -1,46 +1,165 @@
 ---
 export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { loadProfile } from '../lib/profile';
+const profile = loadProfile();
+// Limits must match the backend (DECISIONS D4)
+const NAME_MAX = 30;
+const MESSAGE_MAX = 280;
 ---
-<BaseLayout title="Guestbook">
-  <section class="card">
-    <h1>Guestbook</h1>
-    <p>ฝากข้อความไว้ได้ทางฟอร์มนี้ — อ่าน/เขียนผ่าน <code>/api/guestbook</code></p>
-    <form id="gb-form">
-      <label for="name">Name</label>
-      <input id="name" name="name" required maxlength="80" />
-      <label for="message">Message</label>
-      <textarea id="message" name="message" rows="3" required maxlength="500"></textarea>
-      <p style="margin-top:1rem"><button type="submit">Sign</button></p>
-    </form>
-    <div id="entries" class="card" style="margin-top:1.25rem" aria-live="polite">Loading…</div>
-  </section>
+<BaseLayout title={`ทักทาย · ${profile.name}`} description="แวะมาแล้ว ฝากคำทักไว้หน่อย">
+  <h1>ทักทาย</h1>
+  <p>แวะมาแล้ว ฝากคำทักไว้หน่อย ข้อความจะแสดงให้ทุกคนที่แวะมาเห็น</p>
+
+  <form id="gb-form" class="card" novalidate data-name-max={NAME_MAX} data-message-max={MESSAGE_MAX}>
+    <label for="gb-name">ชื่อเล่น</label>
+    <input id="gb-name" name="name" required maxlength={NAME_MAX} autocomplete="nickname" aria-describedby="gb-name-hint" />
+    <p id="gb-name-hint" class="muted hint">ชื่อเล่นพอ ไม่ต้องชื่อจริง</p>
+
+    <label for="gb-message">ข้อความ</label>
+    <textarea id="gb-message" name="message" rows="4" required maxlength={MESSAGE_MAX}
+      placeholder="ฝากอะไรไว้ก็ได้ สั้น ๆ พอ" aria-describedby="gb-rules gb-count"></textarea>
+    <p class="muted hint row">
+      <span id="gb-rules">ข้อความเท่านั้น ใส่ลิงก์ไม่ได้นะ · ห้ามใส่ข้อมูลส่วนตัวของตัวเองหรือคนอื่น</span>
+      <span id="gb-count" aria-live="polite">0/{MESSAGE_MAX}</span>
+    </p>
+
+    <button class="btn" type="submit">ส่งคำทัก</button>
+    <p id="gb-status" role="status" aria-live="polite" class="status"></p>
+  </form>
+
+  <h2>คำทักล่าสุด</h2>
+  <ul id="gb-entries" class="entries" aria-live="polite">
+    <li class="muted">กำลังโหลด…</li>
+  </ul>
 </BaseLayout>
+
+<style>
+  .hint { font-size: var(--ci-text-sm); margin: 0.35rem 0 0; }
+  .row { display: flex; justify-content: space-between; gap: 1rem; }
+  .btn { margin-top: 1.25rem; }
+  .status { margin: 0.75rem 0 0; min-height: 1.7em; }
+  .status[data-kind="error"] { color: var(--ci-danger); }
+  .status[data-kind="ok"] { color: var(--ci-success); }
+  .entries { list-style: none; padding: 0; margin: 0; }
+  .entries li { border-bottom: 1px solid var(--ci-border); padding: 0.75rem 0; }
+  .entries .who { font-weight: 700; }
+  .entries .when { font-size: var(--ci-text-sm); }
+  .entries .msg { margin: 0.25rem 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+</style>
+
 <script>
-  const entries = document.getElementById('entries');
-  const form = document.getElementById('gb-form');
+  // API contract proposed to backend in docs/handoffs/04-claude-to-opencode.md
+  type Entry = { id: number; name: string; message: string; created_at: string };
+
+  const MESSAGES: Record<string, string> = {
+    INVALID_LINK: 'มีลิงก์อยู่ในข้อความ ลบออกแล้วส่งใหม่ได้เลย',
+    INVALID_INPUT: 'ใส่ชื่อเล่นกับข้อความก่อนนะ (ชื่อไม่เกิน 30 ตัวอักษร ข้อความไม่เกิน 280)',
+    RATE_LIMITED: 'ทักถี่ไปนิด พักสักครู่แล้วลองใหม่นะ',
+    READONLY: 'ตอนนี้ปิดรับคำทักชั่วคราว ไว้แวะมาใหม่นะ',
+  };
+  const GENERIC_ERROR = 'ส่งไม่สำเร็จ ลองใหม่อีกครั้ง';
+  const LINK_PATTERN = /(https?:\/\/|www\.)/i;
+
+  const form = document.getElementById('gb-form') as HTMLFormElement;
+  const nameInput = document.getElementById('gb-name') as HTMLInputElement;
+  const messageInput = document.getElementById('gb-message') as HTMLTextAreaElement;
+  const count = document.getElementById('gb-count') as HTMLElement;
+  const status = document.getElementById('gb-status') as HTMLElement;
+  const list = document.getElementById('gb-entries') as HTMLUListElement;
+  const button = form.querySelector('button') as HTMLButtonElement;
+  const nameMax = Number(form.dataset.nameMax);
+  const messageMax = Number(form.dataset.messageMax);
+
+  function setStatus(text: string, kind: 'ok' | 'error' | '' = '') {
+    status.textContent = text;
+    status.dataset.kind = kind;
+  }
+
+  function note(text: string) {
+    const li = document.createElement('li');
+    li.className = 'muted';
+    li.textContent = text;
+    return li;
+  }
+
+  function formatDate(value: string) {
+    const d = new Date(value);
+    return Number.isNaN(d.getTime()) ? '' : d.toLocaleDateString('th-TH', { dateStyle: 'medium' });
+  }
+
+  // Build nodes with textContent only — visitor text is never parsed as HTML
+  function renderEntry(e: Entry) {
+    const li = document.createElement('li');
+    const who = document.createElement('span');
+    who.className = 'who';
+    who.textContent = e.name;
+    li.append(who);
+    const when = formatDate(e.created_at);
+    if (when) {
+      const t = document.createElement('span');
+      t.className = 'muted when';
+      t.textContent = ` · ${when}`;
+      li.append(t);
+    }
+    const msg = document.createElement('p');
+    msg.className = 'msg';
+    msg.textContent = e.message;
+    li.append(msg);
+    return li;
+  }
+
   async function load() {
-    const res = await fetch('/api/guestbook');
-    const data = await res.json();
-    if (!res.ok) {
-      entries.textContent = data.error || `HTTP ${res.status}`;
+    try {
+      const res = await fetch('/api/guestbook');
+      if (!res.ok) throw new Error(String(res.status));
+      const data = (await res.json()) as { entries?: Entry[] };
+      const entries = data.entries ?? [];
+      list.replaceChildren(...(entries.length ? entries.map(renderEntry) : [note('ยังไม่มีใครทักเลย เป็นคนแรกสิ')]));
+    } catch {
+      list.replaceChildren(note('ยังโหลดคำทักไม่ได้ ลองใหม่ภายหลังนะ'));
+    }
+  }
+
+  messageInput.addEventListener('input', () => {
+    count.textContent = `${messageInput.value.length}/${messageMax}`;
+  });
+
+  form.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const name = nameInput.value.trim();
+    const message = messageInput.value.trim();
+    if (!name || !message || name.length > nameMax || message.length > messageMax) {
+      setStatus(MESSAGES.INVALID_INPUT, 'error');
       return;
     }
-    entries.innerHTML = (data.entries || [])
-      .map((e) => `<p><strong>${e.name}</strong>: ${e.message}<br/><small>${e.created_at}</small></p>`)
-      .join('') || '<p>No entries yet.</p>';
-  }
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const payload = Object.fromEntries(new FormData(form).entries());
-    await fetch('/api/guestbook', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    form.reset();
-    await load();
+    if (LINK_PATTERN.test(message) || LINK_PATTERN.test(name)) {
+      setStatus(MESSAGES.INVALID_LINK, 'error');
+      return;
+    }
+    button.disabled = true;
+    setStatus('กำลังส่ง…');
+    try {
+      const res = await fetch('/api/guestbook', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ name, message }),
+      });
+      if (res.status === 201) {
+        form.reset();
+        count.textContent = `0/${messageMax}`;
+        setStatus('ได้รับแล้ว ขอบคุณที่แวะมาทัก 👋', 'ok');
+        await load();
+        return;
+      }
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      setStatus(MESSAGES[data.error ?? ''] ?? GENERIC_ERROR, 'error');
+    } catch {
+      setStatus(GENERIC_ERROR, 'error');
+    } finally {
+      button.disabled = false;
+    }
   });
+
   load();
 </script>
-

@@ -1,0 +1,61 @@
+/* ============================================================
+   Design tokens — my-ci corporate identity
+   Primary #4E2E7F · Secondary #2D1B4E · Accent #8B5CF6
+   Light theme only: docs/DECISIONS.md D8 = white minimal theme and
+   dark mode is out of scope for v1. Add the my-ci dark blocks here
+   when that decision changes.
+   ============================================================ */
+
+:root {
+  --ci-50:  #F4F3F7;
+  --ci-100: #EAE6F0;
+  --ci-200: #D5CDE0;
+  --ci-300: #B8ABCC;
+  --ci-400: #8C77AC;
+  --ci-500: #4E2E7F;   /* Primary */
+  --ci-600: #42276C;
+  --ci-700: #372059;
+  --ci-800: #2D1B4E;   /* Secondary */
+  --ci-900: #231539;
+
+  --ci-accent-light:  #C4B5FD;
+  --ci-accent:        #8B5CF6;   /* fills, borders, rings — not text on white */
+  --ci-accent-strong: #7C3AED;   /* accent text (AA) */
+
+  --ci-primary: var(--ci-500);
+  --ci-primary-hover: var(--ci-600);
+  --ci-primary-active: var(--ci-700);
+
+  --ci-bg: #FFFFFF;
+  --ci-bg-subtle: var(--ci-50);
+  --ci-surface: #FFFFFF;
+  --ci-border: var(--ci-200);
+
+  --ci-text: var(--ci-800);        /* 15.23:1 on white */
+  --ci-text-muted: #6B5B85;        /* body-safe muted */
+  --ci-text-on-primary: #FFFFFF;
+
+  --ci-danger:  #DC2626;
+  --ci-success: #15803D;   /* my-ci #16A34A is 3.30:1 on white — darker for AA text */
+
+  --ci-font-sans: 'LINE Seed Sans TH', 'Noto Sans Thai', 'Segoe UI', system-ui,
+                  -apple-system, sans-serif;
+
+  --ci-text-sm: 0.875rem;
+  --ci-text-base: 1rem;
+  --ci-text-lg: 1.125rem;
+  --ci-text-xl: 1.375rem;
+  --ci-text-3xl: 2.25rem;
+
+  /* Thai needs more leading than Latin — tone marks stack above/below */
+  --ci-leading-tight: 1.35;
+  --ci-leading-normal: 1.7;
+
+  --ci-radius: 10px;
+  --ci-radius-lg: 16px;
+  --ci-radius-full: 999px;
+
+  --ci-shadow-sm: 0 1px 2px rgba(45, 27, 78, 0.08);
+  --ci-ring: 0 0 0 3px rgba(139, 92, 246, 0.45);
+  --ci-transition: 160ms cubic-bezier(0.4, 0, 0.2, 1);
+}

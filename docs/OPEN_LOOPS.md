@@ -3,13 +3,12 @@
 > งานค้างที่ยังไม่ปิด · ลบแถวเมื่อเสร็จ  
 > Owner = `Claude` | `OpenCode` | `human`
 
-Last updated: 2026-09-25 13:45 +07:00
+Last updated: 2026-09-25 13:51 +07:00
 
 | ID | Task | Owner | Priority | Trigger / due | Notes |
 |---|---|---|---|---|---|
 | L8 | Warm-up หลัง deploy: เพิ่ม `HEALTHCHECK` ใน `Dockerfile` ยิง `/` ด้วย `node -e "fetch(...)"` (image อาจไม่มี curl) → คนแรกหลัง restart เห็นการ์ดเพลง · ไม่ใช้ webhook/secret | Claude | P2 | Lab 08 | human เลือกทางเลือก 1 (2026-09-25) · ที่มา `docs/handoffs/05c-opencode-to-claude.md` |
-| L9 | Lab 04 frontend ตาม `DECISIONS.md` เกณฑ์พร้อม Frontend: เมนู 3 หน้าไทย + redirect · tagline คงที่ · ป้ายที่มาการ์ดเพลง · ธีมขาว · ตัดฟอร์ม Contact · microcopy หน้าทักทาย · test ไล่ทุกคอมบิเนชันประโยคสุ่ม (D7) | Claude | P1 | Lab 04 | D1–D9 |
-| L10 | Lab 05 backend ตาม D3–D5: `/api/contact` ห้ามรับข้อมูลสาธารณะ (แต่ `insertContact` ต้องผ่าน test labs) · guestbook validate + rate limit IP ใน memory · `GUESTBOOK_READONLY` · คู่มือลบข้อความ | OpenCode | P1 | Lab 05 | ต้องมี handoff จาก Claude ก่อน · หมายเหตุ D3 |
+| L10 | Lab 05 backend: guestbook API ตาม D4/D5 + ชุดรหัส error ปิด (D9) + `/api/contact` ไม่รับข้อมูล (D3) + `docs/GUESTBOOK.md` | OpenCode | P1 | Lab 05 | สเปก `docs/handoffs/04-claude-to-opencode.md` · รายงานสัญญา `docs/fe-be-contract-check.md` · 404 vs 410 รอ human |
 
 ## ปิดแล้ว (ย่อ — ย้ายหรือลบได้เมื่อรก)
 
@@ -22,6 +21,7 @@ Last updated: 2026-09-25 13:45 +07:00
 | L6 | เพลงสุ่มไม่ทำให้หน้าแรกรอ + การ์ดขึ้นตั้งแต่คนแรก — warm-up · stale-while-revalidate · cold-start wait ≤1s · single-flight · backoff 60s · timeout 8s · `__resetForTest()` · 13 tests · วัดจริง `/` 3045ms → 1067ms (สเปก `05b-claude-to-opencode.md` · ส่งกลับ `05b-opencode-to-claude.md`) | 2026-09-25 |
 | L7 | ชาร์ตว่าง → backoff 60s (OpenCode `f36b393`) · boot warm-up ทำไม่ได้ใน Astro (page/middleware โหลด lazy) → human เลือกยอมรับไปก่อน + ย้ายไป L8 (Lab 08) | 2026-09-25 |
 | L5 | Lab 02: DEBATE 3 มุม → `DECISIONS.md` D1–D10 (human ตัดสิน 4 ข้อขัดแย้ง) | 2026-09-25 |
+| L9 | Lab 04 UI ตาม DECISIONS D1–D9: 3 หน้าเมนูไทย + redirect · tagline · การ์ดเพลงมีป้ายที่มา · หน้าทักทาย · ธีมขาว my-ci · ตรวจสัญญา API กับ OpenCode (`2a3063e`) | 2026-09-25 |
 
 ## กฎสั้น
 

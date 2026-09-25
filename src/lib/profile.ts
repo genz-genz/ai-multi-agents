@@ -8,6 +8,8 @@ import { fileURLToPath } from 'node:url';
 export type Profile = {
   name: string;
   headline: string;
+  /** Fixed line under the headline (DECISIONS D1) — empty = not rendered. */
+  tagline: string;
   bio: string;
   audience: string;
   interests: string[];
@@ -21,6 +23,7 @@ export type Profile = {
 const FALLBACK: Profile = {
   name: 'Your Name',
   headline: 'Personal branding site',
+  tagline: '',
   bio: 'This personal site is still being built — content is coming soon.',
   audience: 'Hiring managers / peers / community',
   interests: ['AI agents', 'Web', 'Teaching'],
@@ -53,6 +56,7 @@ export function parseProfile(source: string): Profile {
   return {
     name: get('Name') || FALLBACK.name,
     headline: get('Headline') || FALLBACK.headline,
+    tagline: get('Tagline') || FALLBACK.tagline,
     bio: get('Bio') || FALLBACK.bio,
     audience: get('Audience') || FALLBACK.audience,
     interests: interests.length ? interests : FALLBACK.interests,

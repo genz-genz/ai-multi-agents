@@ -4,35 +4,57 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { loadProfile } from '../lib/profile';
 import { getRandomSong } from '../lib/music';
 import { pickTagline } from '../lib/tagline';
+import { toAppleEmbedUrl } from '../lib/embed';
 const profile = loadProfile();
-const tagline = pickTagline(profile.interests);
-// null = chart unavailable → hide the card entirely (L3 handoff contract)
+// DECISIONS D1: headline → fixed tagline → random daily line → song card
+const dailyLine = pickTagline(profile.interests);
+// null = chart unavailable → hide the card entirely (D6)
 const song = await getRandomSong();
+// D11: play in place via Apple's embed; null = link only
+const embedUrl = song ? toAppleEmbedUrl(song.url) : null;
 ---
-<BaseLayout title={`${profile.name} · Home`} description={profile.headline}>
-  <section class="card">
-    <p style="margin:0;color:var(--accent);font-weight:700">Personal branding site</p>
-    <h1>{profile.name}</h1>
-    <p style="font-size:1.2rem;color:var(--text)">{profile.headline}</p>
-    <p style="margin-top:-.5rem;color:var(--muted);font-style:italic">{tagline}</p>
-    <p>{profile.bio}</p>
-    <p><strong>Audience:</strong> {profile.audience}</p>
+<BaseLayout title={`${profile.name} · ${profile.headline}`} description={profile.tagline || profile.headline}>
+  <section class="hero">
+    <p class="muted name">{profile.name}</p>
+    <h1>{profile.headline}</h1>
+    {profile.tagline && <p class="tagline">{profile.tagline}</p>}
+    <p class="daily">{dailyLine}</p>
   </section>
+
   {song && (
-    <section class="card" aria-label="เพลงสุ่มวันนี้">
-      <p style="margin:0;color:var(--muted);font-size:.9rem">เพลงสุ่มวันนี้</p>
-      <p style="margin:.25rem 0 0;font-size:1.1rem;color:var(--text);font-weight:700">{song.name}</p>
-      <p style="margin:0;color:var(--muted)">{song.artist}</p>
-      <p style="margin:.5rem 0 0">
-        <a href={song.url} target="_blank" rel="noopener noreferrer">ฟังต่อ ↗</a>
-      </p>
+    <section class="card song" aria-label="เพลงสุ่มวันนี้">
+      <p class="muted label">เพลงสุ่มวันนี้</p>
+      <p class="title">{song.name}</p>
+      <p class="muted">{song.artist}</p>
+      <p class="muted source">จากชาร์ตไทย Apple Music</p>
+      {embedUrl && (
+        <iframe
+          class="player"
+          src={embedUrl}
+          title={`ฟังตัวอย่างเพลง ${song.name} โดย ${song.artist}`}
+          loading="lazy"
+          height="175"
+          allow="autoplay *; encrypted-media *; clipboard-write"
+          sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+        ></iframe>
+      )}
+      <a href={song.url} target="_blank" rel="noopener noreferrer">ฟังต่อบน Apple Music ↗</a>
     </section>
   )}
-  <section class="grid">
-    <a class="card" href="/about"><h2>About</h2><p>เรื่องราวและเส้นทาง</p></a>
-    <a class="card" href="/interests"><h2>Interests</h2><p>หัวข้อที่สนใจ</p></a>
-    <a class="card" href="/contact"><h2>Contact</h2><p>ส่งข้อความถึงฉัน</p></a>
-    <a class="card" href="/guestbook"><h2>Guestbook</h2><p>ฝากคำทักทาย</p></a>
-  </section>
+
+  <p class="cta"><a class="btn" href="/guestbook">แวะมาแล้ว ทักกันหน่อย →</a></p>
 </BaseLayout>
 
+<style>
+  .hero { padding: 1.5rem 0 0.5rem; }
+  .name { margin-bottom: 0.25rem; font-weight: 700; }
+  .tagline { font-size: var(--ci-text-lg); margin-bottom: 0.5rem; }
+  .daily { color: var(--ci-text-muted); font-style: italic; }
+  .song p { margin: 0; }
+  .song .label { font-size: var(--ci-text-sm); }
+  .song .title { font-size: var(--ci-text-lg); font-weight: 700; margin-top: 0.25rem; }
+  .song .source { font-size: var(--ci-text-sm); margin: 0.5rem 0 0.75rem; }
+  .song .player { display: block; width: 100%; border: 0; border-radius: 10px; overflow: hidden; margin-bottom: 0.5rem; }
+  .song a { display: inline-block; min-height: 44px; line-height: 44px; font-weight: 700; }
+  .cta { margin-top: 2rem; }
+</style>
