@@ -7,8 +7,8 @@ Last updated: 2026-09-25 12:00 +07:00
 
 | ID | Task | Owner | Priority | Trigger / due | Notes |
 |---|---|---|---|---|---|
-| L2 | แก้ regex ใน `src/lib/profile.ts` ให้อ่าน section หลายบรรทัด (Bio ทุกย่อหน้า · Interests ทุกข้อ) | Claude | P0 | ก่อน Lab 04 | **ยังไม่เสร็จ** (เช็ก 2026-09-25 11:49: `loadProfile()` ยังได้ Bio ย่อหน้าแรก + Interests 1 ข้อ) · ต้องมี test |
-| L4 | ประโยคสุ่มหน้าแรก: แม่แบบประโยคไทย + คำจาก Interests | Claude | P1 | Lab 04 | ขึ้นกับ L2 · ไม่พึ่งเน็ต |
+| L4 | ประโยคสุ่มหน้าแรก: แม่แบบประโยคไทย + คำจาก Interests | Claude | P1 | Lab 04 | L2 เสร็จแล้ว · ไม่พึ่งเน็ต |
+| L6 | `getRandomSong()`: เมื่อ cache หมดอายุและ Apple ล่ม ทุก request จะยิง fetch ใหม่และรอ timeout 3s → หน้าแรกช้าทุกครั้ง · ควรเลื่อนเวลารีเฟรช (backoff) หลังล้ม + รวม fetch ที่ซ้อนกัน | OpenCode | P2 | Lab 05 | พบตอน Claude review `9297a3e` · ยังใช้งานได้ ไม่พัง |
 | L5 | ย้ายข้อเสนอใน `## Brainstorm` เข้า debate → `DECISIONS.md` | Claude | P1 | Lab 02 | ตอนนี้ยังเป็น proposed |
 
 ## ปิดแล้ว (ย่อ — ย้ายหรือลบได้เมื่อรก)
@@ -16,7 +16,8 @@ Last updated: 2026-09-25 12:00 +07:00
 | ID | Task | Closed |
 |---|---|---|
 | L1 | สร้าง STATUS + OPEN_LOOPS จาก example | 2026-09-25 |
-| L3 | `src/lib/music.ts` `getRandomSong()` — Apple Music RSS ชาร์ตไทย + cache TTL 1 ชม. + stale-on-error + timeout 3s · `npm test` + build ผ่าน · รอ Claude ผูก UI (handoff `05-opencode-to-claude.md`) | 2026-09-25 |
+| L2 | แก้ regex `profile.ts` อ่าน section หลายบรรทัด + `tests/profile.test.ts` (commit `a1c7320`) | 2026-09-25 |
+| L3 | `src/lib/music.ts` `getRandomSong()` — Apple Music RSS ชาร์ตไทย + cache TTL 1 ชม. + stale-on-error + timeout 3s · `npm test` + build ผ่าน · การ์ดบนหน้าแรกผูกแล้ว (Claude · `index.astro`) | 2026-09-25 |
 
 ## กฎสั้น
 
