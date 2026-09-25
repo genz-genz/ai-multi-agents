@@ -3,7 +3,9 @@ export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { loadProfile } from '../lib/profile';
 import { getRandomSong } from '../lib/music';
+import { pickTagline } from '../lib/tagline';
 const profile = loadProfile();
+const tagline = pickTagline(profile.interests);
 // null = chart unavailable → hide the card entirely (L3 handoff contract)
 const song = await getRandomSong();
 ---
@@ -12,6 +14,7 @@ const song = await getRandomSong();
     <p style="margin:0;color:var(--accent);font-weight:700">Personal branding site</p>
     <h1>{profile.name}</h1>
     <p style="font-size:1.2rem;color:var(--text)">{profile.headline}</p>
+    <p style="margin-top:-.5rem;color:var(--muted);font-style:italic">{tagline}</p>
     <p>{profile.bio}</p>
     <p><strong>Audience:</strong> {profile.audience}</p>
   </section>
