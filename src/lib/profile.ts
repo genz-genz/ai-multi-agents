@@ -37,9 +37,13 @@ function profilePath(): string {
 export function loadProfile(): Profile {
   const path = profilePath();
   if (!existsSync(path)) return FALLBACK;
-  const raw = readFileSync(path, 'utf8').replace(/\r\n/g, '\n');
+  return parseProfile(readFileSync(path, 'utf8'));
+}
+
+export function parseProfile(source: string): Profile {
+  const raw = source.replace(/\r\n/g, '\n');
   const get = (label: string) => {
-    const m = raw.match(new RegExp(`^##\\s*${label}\\s*\\n([\\s\\S]*?)(?=^##\\s|$)`, 'm'));
+    const m = raw.match(new RegExp(`^##\\s*${label}\\s*\\n([\\s\\S]*?)(?=^##\\s|(?![\\s\\S]))`, 'm'));
     return (m?.[1] || '').trim();
   };
   const interests = get('Interests')
