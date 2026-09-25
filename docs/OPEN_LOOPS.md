@@ -3,12 +3,13 @@
 > งานค้างที่ยังไม่ปิด · ลบแถวเมื่อเสร็จ  
 > Owner = `Claude` | `OpenCode` | `human`
 
-Last updated: 2026-09-25 13:51 +07:00
+Last updated: 2026-09-25 14:50 +07:00
 
 | ID | Task | Owner | Priority | Trigger / due | Notes |
 |---|---|---|---|---|---|
-| L8 | Warm-up หลัง deploy: เพิ่ม `HEALTHCHECK` ใน `Dockerfile` ยิง `/` ด้วย `node -e "fetch(...)"` (image อาจไม่มี curl) → คนแรกหลัง restart เห็นการ์ดเพลง · ไม่ใช้ webhook/secret | Claude | P2 | Lab 08 | human เลือกทางเลือก 1 (2026-09-25) · ที่มา `docs/handoffs/05c-opencode-to-claude.md` |
+| L8 | Warm-up หลัง deploy: เพิ่ม `HEALTHCHECK` ใน `Dockerfile` ยิง `/` ด้วย `node -e "fetch(...)"` (image อาจไม่มี curl) → คนแรกหลัง restart เห็นการ์ดเพลง · ไม่ใช้ webhook/secret | Claude | P3 | Lab 08 | human เลือกทางเลือก 1 (2026-09-25) · ที่มา `docs/handoffs/05c-opencode-to-claude.md` · **D12: หน้าแรกไม่ใช้ชาร์ตแล้ว → อาจไม่ต้องทำ (ปิดพร้อม L11)** |
 | L10 | Lab 05 backend: guestbook API ตาม D4/D5 + ชุดรหัส error ปิด (D9) + `/api/contact` ไม่รับข้อมูล (D3) + `docs/GUESTBOOK.md` | OpenCode | P1 | Lab 05 | สเปก `docs/handoffs/04-claude-to-opencode.md` · รายงานสัญญา `docs/fe-be-contract-check.md` · 404 vs 410 รอ human |
+| L11 | `src/lib/music.ts` + `tests/music.test.ts` ไม่มีหน้าไหนเรียกแล้วหลัง D12 → เก็บไว้เผื่อใช้ หรือลบ (ถ้าลบ L8 ปิดได้เลย) | human → OpenCode | P3 | ก่อน Lab 08 | ไฟล์เป็นของ OpenCode · Claude ไม่ลบเอง |
 
 ## ปิดแล้ว (ย่อ — ย้ายหรือลบได้เมื่อรก)
 
