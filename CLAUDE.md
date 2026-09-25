@@ -1,3 +1,7 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 @AGENTS.md
 
 # Claude Code — seed คอร์ส (อย่าลบตอน /init)
@@ -39,6 +43,30 @@
 - ห้าม commit `.env` · PR เข้า learner repo เท่านั้น
 - Swarm: หยุดเมื่อ done หรือครบ 20 turns
 - STATUS/OPEN_LOOPS = single-writer · commit ก่อนสลับ harness
+
+## Commands
+
+```powershell
+npm run dev          # Astro dev server → http://localhost:4321
+npm test             # Vitest: tests/**/*.test.ts (ยกเว้น tests/labs) — CI รันอันนี้ + build
+npm run test:labs    # Vitest: tests/labs/** — RED โดยตั้งใจจนกว่า Lab 05 จะ implement
+npm run test:e2e     # Playwright (playwright/) — ต้องมี server รันอยู่ · PLAYWRIGHT_BASE_URL
+npm run build        # astro build → dist/
+npm start            # node ./dist/server/entry.mjs (standalone)
+npx vitest run tests/smoke.test.ts           # รันไฟล์เดียว
+npx vitest run -t "insertContact persists"   # รันตามชื่อ test
+```
+
+Node ≥ 22.12 · Windows/PowerShell เป็นหลัก · CI (`.github/workflows/ci.yml`) = `npm ci && npm test && npm run build`
+
+## Architecture (big picture)
+
+- **Astro SSR** (`output: 'server'`, `@astrojs/node` standalone) — ทุกหน้า/API render ตอน request
+- **Content มาจาก docs:** `src/lib/profile.ts` parse `docs/PROFILE.md` ตามหัวข้อ `## Name / Headline / Bio / Audience / Interests` (Interests = bullet list) → ถ้าหัวข้อหายใช้ `FALLBACK` · แก้ PROFILE.md = เปลี่ยนเว็บ ดังนั้นอย่าเปลี่ยนชื่อหัวข้อ · อ่านตอน runtime → `Dockerfile` copy `docs/` เข้า image ด้วย (`DATA_DIR=/data` volume)
+- **API** `src/pages/api/*.ts` (`prerender = false`) เรียก helper ใน `src/lib/db.ts` · stub โยน `NOT_IMPLEMENTED…` → route แปลงเป็น 501, error อื่น → 400 (POST) / 500 (GET)
+- **SQLite** (`better-sqlite3`) ไฟล์ `$DATA_DIR/site.sqlite` (default `./data`) · schema สร้างใน `getDb()` · connection cache ระดับ module
+- **Test guard `tests/public-site.test.ts`:** ข้อความที่ render ใน `.astro/.html` ห้ามอ้างถึงคอร์ส (เช่น "Lab 04", "แล็บ") — ใส่ได้เฉพาะ frontmatter / HTML comment / `.ts` comment
+- `.claude/agents/` (frontend, reviewer) · `.opencode/agents/` (backend) · skills `public-site-safe`, `opencode` ใน `.claude/skills/`
 
 ## Labs
 
