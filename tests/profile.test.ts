@@ -9,6 +9,9 @@ Sample
 ## Headline
 Hello
 
+## Tagline
+Fixed line
+
 ## Bio
 First paragraph.
 
@@ -38,6 +41,14 @@ describe('parseProfile', () => {
   it('reads the last section through end of file', () => {
     const p = parseProfile('## Interests\n- a\n- b\n');
     expect(p.interests).toEqual(['a', 'b']);
+  });
+
+  it('reads the Tagline section', () => {
+    expect(parseProfile(SAMPLE).tagline).toBe('Fixed line');
+  });
+
+  it('uses an empty tagline when the section is missing', () => {
+    expect(parseProfile('## Name\nX\n').tagline).toBe('');
   });
 
   it('handles CRLF line endings', () => {

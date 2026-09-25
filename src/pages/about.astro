@@ -3,12 +3,28 @@ export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { loadProfile } from '../lib/profile';
 const profile = loadProfile();
+// Keep PROFILE.md paragraphs; Interests live here now (DECISIONS D2)
+const paragraphs = profile.bio.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 ---
-<BaseLayout title={`About · ${profile.name}`}>
-  <article class="card">
-    <h1>About</h1>
-    <p>{profile.bio}</p>
-    <p>เรื่องราวเพิ่มเติม — timeline, skills และลิงก์จะอัปเดตเร็ว ๆ นี้</p>
-  </article>
+<BaseLayout title={`รู้จักกัน · ${profile.name}`} description={profile.tagline || profile.headline}>
+  <h1>รู้จักกัน</h1>
+  {paragraphs.map((p) => <p>{p}</p>)}
+
+  <h2>ที่ชอบทำ</h2>
+  <ul class="chips">
+    {profile.interests.map((item) => <li>{item}</li>)}
+  </ul>
+
+  <p class="cta"><a href="/guestbook">แวะมาแล้ว ทักกันหน่อย →</a></p>
 </BaseLayout>
 
+<style>
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; margin: 0; }
+  .chips li {
+    background: var(--ci-bg-subtle);
+    border: 1px solid var(--ci-border);
+    border-radius: var(--ci-radius-full);
+    padding: 0.35rem 0.9rem;
+  }
+  .cta { margin-top: 2rem; font-weight: 700; }
+</style>

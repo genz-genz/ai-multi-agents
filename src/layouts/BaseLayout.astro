@@ -1,9 +1,18 @@
 ---
+import '../styles/tokens.css';
+
 interface Props {
   title?: string;
   description?: string;
 }
-const { title = 'Personal Site', description = 'Personal branding site for the multi-agent course' } = Astro.props;
+const { title = 'Hello world', description = 'เว็บส่วนตัว แวะมาทักกันได้' } = Astro.props;
+const path = Astro.url.pathname;
+// DECISIONS D2: three pages, Thai nav labels
+const links = [
+  { href: '/', label: 'หน้าแรก', current: path === '/' },
+  { href: '/about', label: 'รู้จักกัน', current: path.startsWith('/about') },
+  { href: '/guestbook', label: 'ทักทาย', current: path.startsWith('/guestbook') },
+];
 ---
 <!doctype html>
 <html lang="th">
@@ -14,59 +23,80 @@ const { title = 'Personal Site', description = 'Personal branding site for the m
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <style is:global>
-      :root {
-        --bg: #0b1020;
-        --card: #141a2f;
-        --text: #eef2ff;
-        --muted: #a5b4d4;
-        --accent: #7c9cff;
-        --border: #243056;
-      }
       * { box-sizing: border-box; }
       body {
         margin: 0;
-        font-family: "Segoe UI", system-ui, sans-serif;
-        background: radial-gradient(circle at top, #17203a, var(--bg) 45%);
-        color: var(--text);
-        min-height: 100vh;
+        background: var(--ci-bg);
+        color: var(--ci-text);
+        font-family: var(--ci-font-sans);
+        font-size: var(--ci-text-base);
+        line-height: var(--ci-leading-normal);
+        -webkit-font-smoothing: antialiased;
+        /* Thai has no spaces between words — never let a run overflow the gutter */
+        overflow-wrap: break-word;
       }
-      a { color: var(--accent); text-decoration: none; }
+      a { color: var(--ci-primary); text-decoration: none; }
       a:hover { text-decoration: underline; }
-      main { width: min(920px, 92vw); margin: 0 auto; padding: 2rem 0 4rem; }
+      :where(a, button, input, textarea):focus-visible {
+        outline: none;
+        box-shadow: var(--ci-ring);
+        border-radius: 6px;
+      }
+      .wrap { width: min(720px, 100% - 2rem); margin: 0 auto; }
+      main { padding: 2rem 0 4rem; }
+      h1, h2 { line-height: var(--ci-leading-tight); font-weight: 700; letter-spacing: -0.01em; color: var(--ci-text); }
+      h1 { font-size: var(--ci-text-3xl); margin: 0 0 0.5rem; }
+      h2 { font-size: var(--ci-text-xl); margin: 2rem 0 0.75rem; }
+      p { margin: 0 0 1rem; }
+      .muted { color: var(--ci-text-muted); }
       .card {
-        background: color-mix(in srgb, var(--card) 92%, white 8%);
-        border: 1px solid var(--border);
-        border-radius: 16px;
+        background: var(--ci-surface);
+        border: 1px solid var(--ci-border);
+        border-radius: var(--ci-radius-lg);
+        box-shadow: var(--ci-shadow-sm);
         padding: 1.25rem 1.5rem;
-        margin: 1rem 0;
+        margin: 1.5rem 0;
       }
-      nav {
-        display: flex; gap: 1rem; flex-wrap: wrap;
-        width: min(920px, 92vw); margin: 0 auto; padding: 1.25rem 0;
-        border-bottom: 1px solid var(--border);
+      .btn {
+        display: inline-block;
+        background: var(--ci-primary);
+        color: var(--ci-text-on-primary);
+        font: inherit;
+        font-weight: 700;
+        border: 0;
+        border-radius: var(--ci-radius);
+        padding: 0.75rem 1.25rem;
+        min-height: 44px;
+        cursor: pointer;
+        transition: background var(--ci-transition);
       }
-      nav a { color: var(--muted); font-weight: 600; }
-      nav a[aria-current="page"] { color: var(--text); }
-      h1, h2 { line-height: 1.2; }
-      p, li { color: var(--muted); line-height: 1.6; }
-      input, textarea, button {
-        font: inherit; border-radius: 10px; border: 1px solid var(--border);
-        background: #0f1528; color: var(--text); padding: 0.7rem 0.9rem; width: 100%;
+      .btn:hover { background: var(--ci-primary-hover); text-decoration: none; }
+      .btn:disabled { opacity: 0.6; cursor: progress; }
+      label { display: block; margin: 1rem 0 0.35rem; font-weight: 700; }
+      input, textarea {
+        font: inherit;
+        color: var(--ci-text);
+        background: var(--ci-surface);
+        border: 1px solid var(--ci-border);
+        border-radius: var(--ci-radius);
+        padding: 0.7rem 0.9rem;
+        width: 100%;
       }
-      button { background: var(--accent); color: #081018; font-weight: 700; cursor: pointer; width: auto; }
-      label { display: block; margin: 0.75rem 0 0.35rem; color: var(--text); font-weight: 600; }
-      .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+      nav { border-bottom: 1px solid var(--ci-border); }
+      nav ul { display: flex; gap: 1.5rem; list-style: none; margin: 0 auto; padding: 1rem 0; }
+      nav a { color: var(--ci-text-muted); font-weight: 700; display: inline-block; padding: 0.25rem 0; }
+      nav a[aria-current="page"] { color: var(--ci-primary); border-bottom: 2px solid var(--ci-accent); }
     </style>
   </head>
   <body>
     <nav aria-label="หลัก">
-      <a href="/" aria-current={Astro.url.pathname === '/' ? 'page' : undefined}>Home</a>
-      <a href="/about" aria-current={Astro.url.pathname.startsWith('/about') ? 'page' : undefined}>About</a>
-      <a href="/interests" aria-current={Astro.url.pathname.startsWith('/interests') ? 'page' : undefined}>Interests</a>
-      <a href="/contact" aria-current={Astro.url.pathname.startsWith('/contact') ? 'page' : undefined}>Contact</a>
-      <a href="/guestbook" aria-current={Astro.url.pathname.startsWith('/guestbook') ? 'page' : undefined}>Guestbook</a>
+      <ul class="wrap">
+        {links.map((l) => (
+          <li><a href={l.href} aria-current={l.current ? 'page' : undefined}>{l.label}</a></li>
+        ))}
+      </ul>
     </nav>
-    <main>
+    <main class="wrap">
       <slot />
     </main>
   </body>
