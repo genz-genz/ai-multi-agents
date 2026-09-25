@@ -3,12 +3,12 @@
 > อ่านทุก session · **สั้น** · single-writer ต่อรอบ  
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 12:10 +07:00  
-Updated by: Claude
+Last updated: 2026-09-25 12:20 +07:00  
+Updated by: OpenCode
 
 ## Current goal
 
-- Lab 02: ย้ายข้อเสนอจาก `## Brainstorm` เข้า debate → ปิดเป็น D-id ใน `DECISIONS.md` (ฝั่ง Claude) · L2 + L3 + L4 ปิดแล้ว
+- Lab 02: ย้ายข้อเสนอจาก `## Brainstorm` เข้า debate → ปิดเป็น D-id ใน `DECISIONS.md` (ฝั่ง Claude) · L2 + L3 + L4 + L6 ปิดแล้ว
 
 ## Done
 
@@ -17,10 +17,11 @@ Updated by: Claude
 - **L3 UI เสร็จ** (Claude): การ์ด "เพลงสุ่มวันนี้" ใน `src/pages/index.astro` · `null` = ซ่อนการ์ด · localhost ตอบ 200 และแสดงเพลงจริง
 - **L4 เสร็จ** (Claude): ประโยคสุ่มใต้ headline หน้าแรก · `src/lib/tagline.ts` แม่แบบไทย 7 แบบ + Interests · ไม่พึ่งเน็ต · `npm test` 20/20
 - **L2 เสร็จ** (Claude · `a1c7320`): parser อ่าน Bio ทุกย่อหน้า + Interests ทุกข้อ · มี `tests/profile.test.ts`
+- **L6 เสร็จ** (OpenCode · 2026-09-25): หน้าแรกไม่รอ Apple — warm-up ตอน import · stale-while-revalidate · cold-start wait ≤1s (`WAIT_MS`) · single-flight · backoff 60s (`BACKOFF_MS`) · fetch timeout 8s · `__resetForTest()` สำหรับ test · วัดจริง dev server: `/` จาก 3045ms → **1067ms** แล้ว 214ms · การ์ดขึ้นจริง · `npm test` 25/25 + build ผ่าน · สเปก `docs/handoffs/05b-claude-to-opencode.md` · ส่งกลับ `docs/handoffs/05b-opencode-to-claude.md`
 
 ## In progress
 
-- L6 ส่ง OpenCode แล้ว → `docs/handoffs/05b-claude-to-opencode.md` (การ์ดเพลงหายตอน cold start)
+- —
 
 ## Blocked
 
@@ -28,14 +29,13 @@ Updated by: Claude
 
 ## Next actions
 
-1. Lab 02: ย้ายข้อเสนอจาก `## Brainstorm` ไป debate → ปิดเป็น D-id ใน `DECISIONS.md` (L5)
-2. OpenCode: L6 — หน้าแรกไม่รอ Apple + การ์ดขึ้นตั้งแต่คนแรก (P1)
+1. Lab 02: ย้ายข้อเสนอจาก `## Brainstorm` ไป debate → ปิดเป็น D-id ใน `DECISIONS.md` (L5 · ฝั่ง Claude)
 
 ## Files changed in latest session
 
-- `src/pages/index.astro` (การ์ดเพลงสุ่ม · ประโยคสุ่ม)
-- `src/lib/tagline.ts` · `tests/tagline.test.ts` (L4)
-- `src/lib/profile.ts` · `tests/profile.test.ts` (L2)
+- `src/lib/music.ts` (L6: warm-up · stale-while-revalidate · cold-start wait ≤1s · single-flight · backoff 60s · fetch timeout 8s)
+- `tests/music.test.ts` (ขยาย 8 → 13 tests)
+- `docs/handoffs/05b-opencode-to-claude.md` (ใหม่)
 - `docs/STATUS.md` · `docs/OPEN_LOOPS.md`
 
 ## Notes
