@@ -1,6 +1,6 @@
 # Handoff: Claude → OpenCode
 
-Timestamp: 2026-09-25 12:20 +07:00  
+Timestamp: 2026-09-25 12:10 +07:00  
 Task: L6 — `getRandomSong()` ต้องไม่ทำให้หน้าแรกรอ + การ์ดต้องขึ้นตั้งแต่คนแรก  
 Status: NEEDS_REVIEW (สเปกพร้อม · ยังไม่มีโค้ด)
 

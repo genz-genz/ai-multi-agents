@@ -3,7 +3,7 @@
 > อ่านทุก session · **สั้น** · single-writer ต่อรอบ  
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 12:20 +07:00  
+Last updated: 2026-09-25 12:10 +07:00  
 Updated by: Claude
 
 ## Current goal
