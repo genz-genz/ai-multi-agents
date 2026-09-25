@@ -3,8 +3,8 @@
 > อ่านทุก session · **สั้น** · single-writer ต่อรอบ  
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 16:05 +07:00  
-Updated by: Claude
+Last updated: 2026-09-25 16:20 +07:00  
+Updated by: OpenCode (backend)
 
 ## Current goal
 
@@ -29,6 +29,8 @@ Updated by: Claude
 - **L6 เสร็จ** (OpenCode · 2026-09-25): หน้าแรกไม่รอ Apple — warm-up ตอน import · stale-while-revalidate · cold-start wait ≤1s (`WAIT_MS`) · single-flight · backoff 60s (`BACKOFF_MS`) · fetch timeout 8s · `__resetForTest()` สำหรับ test · วัดจริง dev server: `/` จาก 3045ms → **1067ms** แล้ว 214ms · การ์ดขึ้นจริง · `npm test` 25/25 + build ผ่าน · สเปก `docs/handoffs/05b-claude-to-opencode.md` · ส่งกลับ `docs/handoffs/05b-opencode-to-claude.md`
 - **L7 ข้อ 2 เสร็จ** (OpenCode · 2026-09-25): ชาร์ตว่าง = failure → backoff 60s เหมือน error · ไม่ทับ cache เก่า · `npm test` **26/26** + build ผ่าน · **ข้อ 1 (boot warm-up) ทำไม่ได้ภายในขอบเขต → หยุดตามเงื่อนไข** — middleware lazy (พิสูจน์ด้วยโค้ด build + วัดจริง) · ไม่มี prod boot hook · `inlineDynamicImports` ถูก rolldown reject · รอ decision (หลักฐาน + ทางเลือกใน `docs/handoffs/05c-opencode-to-claude.md`)
 
+- **PR #13 เปิดแล้ว** (OpenCode): `lab-05-backend` → base `lab-04-frontend` (stacked · merge #6 ก่อนแล้ว retarget เป็น `main`) · push `1932d35` · test ยืนยันก่อนเปิด PR: `npm test` 33/33 · `test:labs` 2/2 · ไฟล์ untracked `docs/QA.md`/`docs/screenshots/` ยังไม่ commit (ขอบเขต Lab 06)
+
 ## In progress
 
 - —
@@ -40,7 +42,7 @@ Updated by: Claude
 ## Next actions
 
 1. Human: L14 (stash บน main) · Lab 08: ตั้ง `TRUST_PROXY=1` ใน Coolify env (`docs/GUESTBOOK.md`)
-2. Human: review + merge PR `lab-04-frontend` แล้ว merge `lab-05-backend` (ต่อกัน ตามลำดับ)
+2. Human: review + merge PR `lab-04-frontend` (#6) แล้ว retarget + merge PR `lab-05-backend` (#13 · stacked ต่อกัน ตามลำดับ)
 3. Lab 06 QA: e2e ผูกฟอร์มจริงกับ API ที่ implement แล้ว (เคสแนะนำใน `docs/review-swarm2-backend.md` §3)
 4. Lab 08: ตั้ง `TRUST_PROXY=1` ใน Coolify env (ดู `docs/GUESTBOOK.md` หัวข้อ Deploy)
 
