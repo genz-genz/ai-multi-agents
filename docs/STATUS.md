@@ -3,7 +3,7 @@
 > อ่านทุก session · **สั้น** · single-writer ต่อรอบ  
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 10:34 +07:00  
+Last updated: 2026-09-25 11:49 +07:00  
 Updated by: Claude
 
 ## Current goal
@@ -18,7 +18,7 @@ Updated by: Claude
 
 ## In progress
 
-- —
+- L3 ส่งให้ OpenCode แล้ว → `docs/handoffs/05-claude-to-opencode.md` (endpoint Apple Music RSS เช็กแล้ว 200)
 
 ## Blocked
 
@@ -26,13 +26,13 @@ Updated by: Claude
 
 ## Next actions
 
-1. แก้บั๊ก parser ใน `src/lib/profile.ts` — Bio/Interests อ่านได้แค่บรรทัดแรก (L2)
+1. แก้บั๊ก parser ใน `src/lib/profile.ts` — Bio/Interests อ่านได้แค่บรรทัดแรก (L2 · เช็กแล้วยังไม่เสร็จ)
 2. Lab 02: ย้ายข้อเสนอจาก `## Brainstorm` ไป debate → ปิดเป็น D-id ใน `DECISIONS.md`
-3. เขียน handoff ให้ `backend` (OpenCode) เรื่องดึง + cache เพลงสุ่ม (L3)
+3. รอ OpenCode ส่ง `05-opencode-to-claude.md` → Claude ทำการ์ดเพลงบนหน้าแรก (L3)
 
 ## Files changed in latest session
 
-- `docs/PROFILE.md` (เพิ่ม `## Brainstorm`)
+- `docs/handoffs/05-claude-to-opencode.md` (ใหม่)
 - `docs/STATUS.md` · `docs/OPEN_LOOPS.md`
 
 ## Notes
