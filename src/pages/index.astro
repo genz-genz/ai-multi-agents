@@ -2,16 +2,14 @@
 export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { loadProfile } from '../lib/profile';
-import { getRandomSong } from '../lib/music';
 import { pickTagline } from '../lib/tagline';
-import { toAppleEmbedUrl } from '../lib/embed';
 const profile = loadProfile();
 // DECISIONS D1: headline → fixed tagline → random daily line → song card
 const dailyLine = pickTagline(profile.interests);
-// null = chart unavailable → hide the card entirely (D6)
-const song = await getRandomSong();
-// D11: play in place via Apple's embed; null = link only
-const embedUrl = song ? toAppleEmbedUrl(song.url) : null;
+// D12: Apple's own Thailand chart playlist — the embed has next/previous
+// and auto-advance built in, and needs no chart fetch on our side.
+const PLAYLIST_URL = 'https://music.apple.com/th/playlist/top-100-thailand/pl.c509137d97214632a087129ece060a3d';
+const PLAYLIST_EMBED_URL = PLAYLIST_URL.replace('https://music.apple.com/', 'https://embed.music.apple.com/');
 ---
 <BaseLayout title={`${profile.name} · ${profile.headline}`} description={profile.tagline || profile.headline}>
   <section class="hero">
@@ -21,26 +19,20 @@ const embedUrl = song ? toAppleEmbedUrl(song.url) : null;
     <p class="daily">{dailyLine}</p>
   </section>
 
-  {song && (
-    <section class="card song" aria-label="เพลงสุ่มวันนี้">
-      <p class="muted label">เพลงสุ่มวันนี้</p>
-      <p class="title">{song.name}</p>
-      <p class="muted">{song.artist}</p>
-      <p class="muted source">จากชาร์ตไทย Apple Music</p>
-      {embedUrl && (
-        <iframe
-          class="player"
-          src={embedUrl}
-          title={`ฟังตัวอย่างเพลง ${song.name} โดย ${song.artist}`}
-          loading="lazy"
-          height="175"
-          allow="autoplay *; encrypted-media *; clipboard-write"
-          sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-        ></iframe>
-      )}
-      <a href={song.url} target="_blank" rel="noopener noreferrer">ฟังต่อบน Apple Music ↗</a>
-    </section>
-  )}
+  <section class="card song" aria-label="เพลงฮิตไทยวันนี้">
+    <p class="muted label">เพลงฮิตไทยวันนี้</p>
+    <p class="muted source">เพลย์ลิสต์ Top 100: Thailand จาก Apple Music · อัปเดตทุกวัน</p>
+    <iframe
+      class="player"
+      src={PLAYLIST_EMBED_URL}
+      title="เพลย์ลิสต์ Top 100: Thailand จาก Apple Music"
+      loading="lazy"
+      height="450"
+      allow="autoplay *; encrypted-media *; clipboard-write"
+      sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+    ></iframe>
+    <a href={PLAYLIST_URL} target="_blank" rel="noopener noreferrer">ฟังต่อบน Apple Music ↗</a>
+  </section>
 
   <p class="cta"><a class="btn" href="/guestbook">แวะมาแล้ว ทักกันหน่อย →</a></p>
 </BaseLayout>
@@ -52,9 +44,12 @@ const embedUrl = song ? toAppleEmbedUrl(song.url) : null;
   .daily { color: var(--ci-text-muted); font-style: italic; }
   .song p { margin: 0; }
   .song .label { font-size: var(--ci-text-sm); }
-  .song .title { font-size: var(--ci-text-lg); font-weight: 700; margin-top: 0.25rem; }
   .song .source { font-size: var(--ci-text-sm); margin: 0.5rem 0 0.75rem; }
   .song .player { display: block; width: 100%; border: 0; border-radius: 10px; overflow: hidden; margin-bottom: 0.5rem; }
+  /* Apple's playlist embed scrolls sideways below ~300px — bleed to the card edges on phones */
+  @media (max-width: 480px) {
+    .song .player { width: calc(100% + 3rem); margin-inline: -1.5rem; border-radius: 0; }
+  }
   .song a { display: inline-block; min-height: 44px; line-height: 44px; font-weight: 700; }
   .cta { margin-top: 2rem; }
 </style>

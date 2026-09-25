@@ -3,15 +3,21 @@
 > อ่านทุก session · **สั้น** · single-writer ต่อรอบ  
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 13:51 +07:00  
-Updated by: Claude
+Last updated: 2026-09-25 16:20 +07:00  
+Updated by: OpenCode (backend)
 
 ## Current goal
 
-- Lab 04 frontend เสร็จ (PR `lab-04-frontend`) → ถัดไป Lab 05 backend (OpenCode · L10)
+- Lab 05 backend เสร็จ + L12 ปิดแล้ว (branch `lab-05-backend` · ต่อจาก `lab-04-frontend`) → ถัดไป Lab 06 QA
 
 ## Done
 
+- **L12 + L13 ปิด** (OpenCode `71f37fe` ผ่าน `opencode run --agent backend` · Claude ตรวจ diff + รันซ้ำ): XFF เชื่อเฉพาะ `TRUST_PROXY=1` ตัวท้ายสุด · body ≤ 10KB · `npm test` 33/33 · `test:labs` 2/2 · build ผ่าน · e2e 6/6 (มี `TRUST_PROXY=1`) / 5+1 skip (ไม่มี = XFF ปลอมใช้ไม่ได้แล้ว)
+- **L12 ปิด** (OpenCode · 2026-09-25): `clientIp()` เชื่อ XFF เฉพาะ `TRUST_PROXY=1` และใช้**ตัวท้ายสุด** (ทาง A · ไม่ใส่ Dockerfile — ตั้งใน Coolify env ตอน Lab 08 · บันทึกใน `docs/GUESTBOOK.md` หัวข้อ Deploy) · เพดาน body 10KB ก่อน parse (content-length + เช็กจริงหลังอ่าน กัน chunked ที่ไม่มี header) → 400 `INVALID_INPUT` (ชุดปิด D9 ไม่เพิ่ม code) · test ใหม่ `tests/guestbook-ip.test.ts` 4 เคส (RED 3/4 ก่อนแก้ → GREEN) · `npm test` 33/33 · `test:labs` 2/2 · build ผ่าน · handoff กลับ `docs/handoffs/05d-opencode-to-claude.md`
+- **Swarm รอบ 2** (Claude + OpenCode ผ่าน skill `opencode` · 12/20 turns · `docs/SWARM.md`): OpenCode รีวิว → `docs/review-swarm2-backend.md` · e2e guestbook ใหม่ + เคส contact ตรง D13 · `test:e2e` 6/6 (Edge · `PLAYWRIGHT_CHANNEL`) · L12 handoff ให้ OpenCode
+- **Swarm guestbook/API** (Claude · 12/20 turns · `docs/SWARM.md`): test:labs 2/2 · npm test 29/29 · build ผ่าน · ส่งฟอร์มทักทายผ่านเบราว์เซอร์จริงได้ · contact 410 · บันทึก D13 · ช่องว่าง → L12–L14
+- **L10 / Lab 05 backend เสร็จ** (OpenCode): `src/lib/db.ts` — `insertGuestbook` / `listGuestbook` / `insertContact` implement จริง (better-sqlite3) + validate ฝั่ง server (D4: trim · 30/280 · ปฏิเสธลิงก์รวมโดเมนติดตัวอักษร · ไม่เก็บอีเมล/IP) + `ApiError` รหัสปิด (D9) · `src/pages/api/guestbook.ts` — map รหัส→status (400/403/429/500) · rate limit 1 ข้อความ/นาที/IP ใน memory (TTL 5 นาที · นับเฉพาะโพสต์สำเร็จ · validate ก่อน gate เพื่อให้ error ชัดก่อนขำ) · อ่าน IP จาก `x-forwarded-for` ก่อน `clientAddress` (หลัง proxy) · `GUESTBOOK_READONLY=1` → 403 (D5) · `src/pages/api/contact.ts` — **410 GONE ไม่ parse body** (D3 · human เลือก 410 แทน 404 · รอ Claude บันทึกเป็น D-id ใน DECISIONS.md) · `created_at` = ISO 8601 UTC ตามสัญญาที่ตกลง · **ผลตรวจ: `test:labs` 2/2 · `npm test` 29/29 · build ผ่าน · smoke HTTP จริงครบเมทริกซ์** (GET 200 · POST 201 · 429 · INVALID_LINK · INVALID_INPUT · 410 · READONLY 403 โดย GET ยัง 200) · คู่มือลบ `docs/GUESTBOOK.md` (D5) · รายละเอียดใน `docs/handoffs/05-L10-opencode-to-claude.md`
+- **D12 การ์ดเพลง = เพลย์ลิสต์ Top 100: Thailand** (Claude · แทน D11): Apple Music embed แบบเพลย์ลิสต์ใน `index.astro` · มีปุ่มถัดไป/ก่อนหน้าในตัว · หน้าแรกไม่เรียก `getRandomSong()` แล้ว (ค้าง L11: จะเก็บหรือลบ `music.ts`)
 - **L9 / Lab 04 UI เสร็จ** (Claude · `2a3063e`): 3 หน้าเมนูไทย (`/interests` `/contact` → 301) · หน้าแรก headline/tagline/ประโยคสุ่ม/การ์ดเพลง · หน้าทักทาย (limit + microcopy + `textContent`) · ธีมขาว my-ci · `npm test` 29/29 · build ผ่าน · 360px ไม่ล้น · สัญญา API ตรวจโดย OpenCode → `docs/fe-be-contract-check.md`
 - **L5 / Lab 02 เสร็จ** (2026-09-25): `docs/DEBATE.md` 3 มุม + `docs/DECISIONS.md` D1–D10 · human เลือก: 3 หน้าเมนูไทย · ตัดฟอร์ม Contact · rate limit IP ใน memory · เจ้าของลบข้อความเองภายใน 24 ชม. · PROFILE เพิ่ม `## Tagline`
 - **L7 ปิด** (2026-09-25): ชาร์ตว่างเข้า backoff (OpenCode `f36b393`) · Claude ยืนยันว่า Astro โหลด page แบบ lazy จึงทำ boot warm-up ใน app ไม่ได้ · human เลือกยอมรับไปก่อน → แก้ตอน deploy (L8)
@@ -23,9 +29,11 @@ Updated by: Claude
 - **L6 เสร็จ** (OpenCode · 2026-09-25): หน้าแรกไม่รอ Apple — warm-up ตอน import · stale-while-revalidate · cold-start wait ≤1s (`WAIT_MS`) · single-flight · backoff 60s (`BACKOFF_MS`) · fetch timeout 8s · `__resetForTest()` สำหรับ test · วัดจริง dev server: `/` จาก 3045ms → **1067ms** แล้ว 214ms · การ์ดขึ้นจริง · `npm test` 25/25 + build ผ่าน · สเปก `docs/handoffs/05b-claude-to-opencode.md` · ส่งกลับ `docs/handoffs/05b-opencode-to-claude.md`
 - **L7 ข้อ 2 เสร็จ** (OpenCode · 2026-09-25): ชาร์ตว่าง = failure → backoff 60s เหมือน error · ไม่ทับ cache เก่า · `npm test` **26/26** + build ผ่าน · **ข้อ 1 (boot warm-up) ทำไม่ได้ภายในขอบเขต → หยุดตามเงื่อนไข** — middleware lazy (พิสูจน์ด้วยโค้ด build + วัดจริง) · ไม่มี prod boot hook · `inlineDynamicImports` ถูก rolldown reject · รอ decision (หลักฐาน + ทางเลือกใน `docs/handoffs/05c-opencode-to-claude.md`)
 
+- **PR #13 เปิดแล้ว** (OpenCode): `lab-05-backend` → base `lab-04-frontend` (stacked · merge #6 ก่อนแล้ว retarget เป็น `main`) · push `1932d35` · test ยืนยันก่อนเปิด PR: `npm test` 33/33 · `test:labs` 2/2 · ไฟล์ untracked `docs/QA.md`/`docs/screenshots/` ยังไม่ commit (ขอบเขต Lab 06)
+
 ## In progress
 
-- L10 ส่ง OpenCode แล้ว → `docs/handoffs/04-claude-to-opencode.md`
+- —
 
 ## Blocked
 
@@ -33,17 +41,18 @@ Updated by: Claude
 
 ## Next actions
 
-1. OpenCode: Lab 05 guestbook API (L10) — ถาม human เรื่อง `/api/contact` 404 vs 410 ก่อน
-2. Human: review + merge PR Lab 04
-3. Lab 08: HEALTHCHECK warm การ์ดเพลง (L8)
+1. Human: L14 (stash บน main) · Lab 08: ตั้ง `TRUST_PROXY=1` ใน Coolify env (`docs/GUESTBOOK.md`)
+2. Human: review + merge PR `lab-04-frontend` (#6) แล้ว retarget + merge PR `lab-05-backend` (#13 · stacked ต่อกัน ตามลำดับ)
+3. Lab 06 QA: e2e ผูกฟอร์มจริงกับ API ที่ implement แล้ว (เคสแนะนำใน `docs/review-swarm2-backend.md` §3)
+4. Lab 08: ตั้ง `TRUST_PROXY=1` ใน Coolify env (ดู `docs/GUESTBOOK.md` หัวข้อ Deploy)
 
 ## Files changed in latest session
 
-- `src/layouts/BaseLayout.astro` · `src/pages/{index,about,guestbook,interests,contact}.astro` · `src/styles/tokens.css` (ใหม่)
-- `src/lib/profile.ts` (`tagline`) · `src/lib/tagline.ts` · `tests/profile.test.ts` · `tests/tagline.test.ts` · `.gitignore`
-- `docs/fe-be-contract-check.md` (OpenCode) · `docs/handoffs/04-claude-to-opencode.md` · `docs/STATUS.md` · `docs/OPEN_LOOPS.md`
+- `src/pages/api/guestbook.ts` · `tests/guestbook-ip.test.ts` (ใหม่) · `docs/GUESTBOOK.md`
+- `docs/STATUS.md` · `docs/OPEN_LOOPS.md` · `docs/handoffs/05d-opencode-to-claude.md`
 
 ## Notes
 
 - Proposed vs Approved: Apple Music RSS + ประโยคสุ่ม ยัง proposed ใน `DEBATE.md` — รอปิดเป็น D-id
 - `## Brainstorm` ไม่ถูก render บนเว็บ (`profile.ts` ไม่อ่านหัวข้อนี้)
+- Rate limit อยู่ใน memory ของ process — สมมุติรัน 1 container ต่อเว็บ (ถ้า scale หลาย instance นับแยกกัน — ยอมรับไว้ใน handoff Lab 04 แล้ว)
