@@ -3,15 +3,16 @@
 > อ่านทุก session · **สั้น** · single-writer ต่อรอบ  
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 15:50 +07:00  
-Updated by: Claude
+Last updated: 2026-09-25 15:55 +07:00  
+Updated by: OpenCode
 
 ## Current goal
 
-- Lab 05 backend เสร็จ (branch `lab-05-backend` · ต่อจาก `lab-04-frontend`) → ถัดไป Lab 06 QA
+- Lab 05 backend เสร็จ + L12 ปิดแล้ว (branch `lab-05-backend` · ต่อจาก `lab-04-frontend`) → ถัดไป Lab 06 QA
 
 ## Done
 
+- **L12 ปิด** (OpenCode · 2026-09-25): `clientIp()` เชื่อ XFF เฉพาะ `TRUST_PROXY=1` และใช้**ตัวท้ายสุด** (ทาง A · ไม่ใส่ Dockerfile — ตั้งใน Coolify env ตอน Lab 08 · บันทึกใน `docs/GUESTBOOK.md` หัวข้อ Deploy) · เพดาน body 10KB ก่อน parse (content-length + เช็กจริงหลังอ่าน กัน chunked ที่ไม่มี header) → 400 `INVALID_INPUT` (ชุดปิด D9 ไม่เพิ่ม code) · test ใหม่ `tests/guestbook-ip.test.ts` 4 เคส (RED 3/4 ก่อนแก้ → GREEN) · `npm test` 33/33 · `test:labs` 2/2 · build ผ่าน · handoff กลับ `docs/handoffs/05d-opencode-to-claude.md`
 - **Swarm รอบ 2** (Claude + OpenCode ผ่าน skill `opencode` · 12/20 turns · `docs/SWARM.md`): OpenCode รีวิว → `docs/review-swarm2-backend.md` · e2e guestbook ใหม่ + เคส contact ตรง D13 · `test:e2e` 6/6 (Edge · `PLAYWRIGHT_CHANNEL`) · L12 handoff ให้ OpenCode
 - **Swarm guestbook/API** (Claude · 12/20 turns · `docs/SWARM.md`): test:labs 2/2 · npm test 29/29 · build ผ่าน · ส่งฟอร์มทักทายผ่านเบราว์เซอร์จริงได้ · contact 410 · บันทึก D13 · ช่องว่าง → L12–L14
 - **L10 / Lab 05 backend เสร็จ** (OpenCode): `src/lib/db.ts` — `insertGuestbook` / `listGuestbook` / `insertContact` implement จริง (better-sqlite3) + validate ฝั่ง server (D4: trim · 30/280 · ปฏิเสธลิงก์รวมโดเมนติดตัวอักษร · ไม่เก็บอีเมล/IP) + `ApiError` รหัสปิด (D9) · `src/pages/api/guestbook.ts` — map รหัส→status (400/403/429/500) · rate limit 1 ข้อความ/นาที/IP ใน memory (TTL 5 นาที · นับเฉพาะโพสต์สำเร็จ · validate ก่อน gate เพื่อให้ error ชัดก่อนขำ) · อ่าน IP จาก `x-forwarded-for` ก่อน `clientAddress` (หลัง proxy) · `GUESTBOOK_READONLY=1` → 403 (D5) · `src/pages/api/contact.ts` — **410 GONE ไม่ parse body** (D3 · human เลือก 410 แทน 404 · รอ Claude บันทึกเป็น D-id ใน DECISIONS.md) · `created_at` = ISO 8601 UTC ตามสัญญาที่ตกลง · **ผลตรวจ: `test:labs` 2/2 · `npm test` 29/29 · build ผ่าน · smoke HTTP จริงครบเมทริกซ์** (GET 200 · POST 201 · 429 · INVALID_LINK · INVALID_INPUT · 410 · READONLY 403 โดย GET ยัง 200) · คู่มือลบ `docs/GUESTBOOK.md` (D5) · รายละเอียดใน `docs/handoffs/05-L10-opencode-to-claude.md`
@@ -37,14 +38,15 @@ Updated by: Claude
 
 ## Next actions
 
-1. OpenCode: L12 ตาม `docs/handoffs/05d-claude-to-opencode.md` (writer รอบถัดไป = OpenCode) · human: L14 (stash บน main)
+1. Claude: L13 (e2e เคส XSS หาวิธี seed ใหม่หลัง L12) ใน Lab 06 · human: L14 (stash บน main)
 2. Human: review + merge PR `lab-04-frontend` แล้ว merge `lab-05-backend` (ต่อกัน ตามลำดับ)
-3. Lab 06 QA: e2e ผูกฟอร์มจริงกับ API ที่ implement แล้ว
+3. Lab 06 QA: e2e ผูกฟอร์มจริงกับ API ที่ implement แล้ว (เคสแนะนำใน `docs/review-swarm2-backend.md` §3)
+4. Lab 08: ตั้ง `TRUST_PROXY=1` ใน Coolify env (ดู `docs/GUESTBOOK.md` หัวข้อ Deploy)
 
 ## Files changed in latest session
 
-- `src/lib/db.ts` · `src/pages/api/guestbook.ts` · `src/pages/api/contact.ts`
-- `docs/GUESTBOOK.md` (ใหม่) · `docs/STATUS.md` · `docs/OPEN_LOOPS.md` · `docs/handoffs/05-L10-opencode-to-claude.md`
+- `src/pages/api/guestbook.ts` · `tests/guestbook-ip.test.ts` (ใหม่) · `docs/GUESTBOOK.md`
+- `docs/STATUS.md` · `docs/OPEN_LOOPS.md` · `docs/handoffs/05d-opencode-to-claude.md`
 
 ## Notes
 

@@ -46,9 +46,18 @@ function sweepExpired(now: number): void {
 }
 
 function clientIp(request: Request, clientAddress: string | undefined): string {
-  // Behind a proxy (Coolify) the socket address is the proxy — prefer the forwarded chain.
-  const forwarded = request.headers.get('x-forwarded-for');
-  if (forwarded) return forwarded.split(',')[0].trim();
+  // Trust X-Forwarded-For only when explicitly behind a proxy (TRUST_PROXY=1,
+  // set in Coolify env at deploy — never baked into the image). Take the LAST
+  // entry: the one our proxy appended; earlier entries are client-controlled
+  // and spoofable (L12). Without the env, the socket address is the truth.
+  if (process.env.TRUST_PROXY === '1') {
+    const forwarded = request.headers.get('x-forwarded-for');
+    if (forwarded) {
+      const parts = forwarded.split(',');
+      const last = parts[parts.length - 1].trim();
+      if (last) return last;
+    }
+  }
   return clientAddress ?? 'unknown';
 }
 
@@ -65,13 +74,25 @@ export const GET: APIRoute = async () => {
   }
 };
 
+// L12: reject oversized bodies before parsing (D9 closed set → INVALID_INPUT).
+const MAX_BODY_BYTES = 10 * 1024;
+
 export const POST: APIRoute = async ({ request, clientAddress }) => {
   // D5: instant kill-switch for new submissions (reads env per request)
   if (process.env.GUESTBOOK_READONLY === '1') return errorResponse('READONLY');
 
+  const contentLength = Number(request.headers.get('content-length') ?? 0);
+  if (contentLength > MAX_BODY_BYTES) return errorResponse('INVALID_INPUT');
+
   let body: unknown;
   try {
-    body = await request.json();
+    // Read as text so the cap also holds for chunked requests that carry no
+    // content-length; TextEncoder gives exact UTF-8 bytes.
+    const text = await request.text();
+    if (new TextEncoder().encode(text).byteLength > MAX_BODY_BYTES) {
+      return errorResponse('INVALID_INPUT');
+    }
+    body = JSON.parse(text);
   } catch {
     return errorResponse('INVALID_INPUT');
   }
