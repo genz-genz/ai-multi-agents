@@ -3,15 +3,16 @@
 > อ่านทุก session · **สั้น** · single-writer ต่อรอบ  
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 14:50 +07:00  
-Updated by: Claude
+Last updated: 2026-09-25 15:00 +07:00  
+Updated by: OpenCode
 
 ## Current goal
 
-- Lab 04 frontend เสร็จ (PR `lab-04-frontend`) → ถัดไป Lab 05 backend (OpenCode · L10)
+- Lab 05 backend เสร็จ (branch `lab-05-backend` · ต่อจาก `lab-04-frontend`) → ถัดไป Lab 06 QA
 
 ## Done
 
+- **L10 / Lab 05 backend เสร็จ** (OpenCode): `src/lib/db.ts` — `insertGuestbook` / `listGuestbook` / `insertContact` implement จริง (better-sqlite3) + validate ฝั่ง server (D4: trim · 30/280 · ปฏิเสธลิงก์รวมโดเมนติดตัวอักษร · ไม่เก็บอีเมล/IP) + `ApiError` รหัสปิด (D9) · `src/pages/api/guestbook.ts` — map รหัส→status (400/403/429/500) · rate limit 1 ข้อความ/นาที/IP ใน memory (TTL 5 นาที · นับเฉพาะโพสต์สำเร็จ · validate ก่อน gate เพื่อให้ error ชัดก่อนขำ) · อ่าน IP จาก `x-forwarded-for` ก่อน `clientAddress` (หลัง proxy) · `GUESTBOOK_READONLY=1` → 403 (D5) · `src/pages/api/contact.ts` — **410 GONE ไม่ parse body** (D3 · human เลือก 410 แทน 404 · รอ Claude บันทึกเป็น D-id ใน DECISIONS.md) · `created_at` = ISO 8601 UTC ตามสัญญาที่ตกลง · **ผลตรวจ: `test:labs` 2/2 · `npm test` 29/29 · build ผ่าน · smoke HTTP จริงครบเมทริกซ์** (GET 200 · POST 201 · 429 · INVALID_LINK · INVALID_INPUT · 410 · READONLY 403 โดย GET ยัง 200) · คู่มือลบ `docs/GUESTBOOK.md` (D5) · รายละเอียดใน `docs/handoffs/05-L10-opencode-to-claude.md`
 - **D12 การ์ดเพลง = เพลย์ลิสต์ Top 100: Thailand** (Claude · แทน D11): Apple Music embed แบบเพลย์ลิสต์ใน `index.astro` · มีปุ่มถัดไป/ก่อนหน้าในตัว · หน้าแรกไม่เรียก `getRandomSong()` แล้ว (ค้าง L11: จะเก็บหรือลบ `music.ts`)
 - **L9 / Lab 04 UI เสร็จ** (Claude · `2a3063e`): 3 หน้าเมนูไทย (`/interests` `/contact` → 301) · หน้าแรก headline/tagline/ประโยคสุ่ม/การ์ดเพลง · หน้าทักทาย (limit + microcopy + `textContent`) · ธีมขาว my-ci · `npm test` 29/29 · build ผ่าน · 360px ไม่ล้น · สัญญา API ตรวจโดย OpenCode → `docs/fe-be-contract-check.md`
 - **L5 / Lab 02 เสร็จ** (2026-09-25): `docs/DEBATE.md` 3 มุม + `docs/DECISIONS.md` D1–D10 · human เลือก: 3 หน้าเมนูไทย · ตัดฟอร์ม Contact · rate limit IP ใน memory · เจ้าของลบข้อความเองภายใน 24 ชม. · PROFILE เพิ่ม `## Tagline`
@@ -26,7 +27,7 @@ Updated by: Claude
 
 ## In progress
 
-- L10 ส่ง OpenCode แล้ว → `docs/handoffs/04-claude-to-opencode.md`
+- —
 
 ## Blocked
 
@@ -34,17 +35,17 @@ Updated by: Claude
 
 ## Next actions
 
-1. OpenCode: Lab 05 guestbook API (L10) — ถาม human เรื่อง `/api/contact` 404 vs 410 ก่อน
-2. Human: review + merge PR Lab 04
-3. Lab 08: HEALTHCHECK warm การ์ดเพลง (L8)
+1. Claude: บันทึก decision "410 GONE" ลง `docs/DECISIONS.md` (เป็น D13 · ownership Claude) + รับ handoff `docs/handoffs/05-L10-opencode-to-claude.md`
+2. Human: review + merge PR `lab-04-frontend` แล้ว merge `lab-05-backend` (ต่อกัน ตามลำดับ)
+3. Lab 06 QA: e2e ผูกฟอร์มจริงกับ API ที่ implement แล้ว
 
 ## Files changed in latest session
 
-- `src/layouts/BaseLayout.astro` · `src/pages/{index,about,guestbook,interests,contact}.astro` · `src/styles/tokens.css` (ใหม่)
-- `src/lib/profile.ts` (`tagline`) · `src/lib/tagline.ts` · `tests/profile.test.ts` · `tests/tagline.test.ts` · `.gitignore`
-- `docs/fe-be-contract-check.md` (OpenCode) · `docs/handoffs/04-claude-to-opencode.md` · `docs/STATUS.md` · `docs/OPEN_LOOPS.md`
+- `src/lib/db.ts` · `src/pages/api/guestbook.ts` · `src/pages/api/contact.ts`
+- `docs/GUESTBOOK.md` (ใหม่) · `docs/STATUS.md` · `docs/OPEN_LOOPS.md` · `docs/handoffs/05-L10-opencode-to-claude.md`
 
 ## Notes
 
 - Proposed vs Approved: Apple Music RSS + ประโยคสุ่ม ยัง proposed ใน `DEBATE.md` — รอปิดเป็น D-id
 - `## Brainstorm` ไม่ถูก render บนเว็บ (`profile.ts` ไม่อ่านหัวข้อนี้)
+- Rate limit อยู่ใน memory ของ process — สมมุติรัน 1 container ต่อเว็บ (ถ้า scale หลาย instance นับแยกกัน — ยอมรับไว้ใน handoff Lab 04 แล้ว)
