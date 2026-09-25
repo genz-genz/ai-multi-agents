@@ -46,3 +46,48 @@
 
 - skill `public-site-safe` · ไม่แก้ test · ไม่ commit `.env` / ไม่พิมพ์ secret · ไม่ใช้ MCP เป็นท่อ Claude ↔ OpenCode
 - ข้อมูลทดสอบอยู่ใน `DATA_DIR` ชั่วคราวเท่านั้น ลบแล้ว · ไม่แตะ `data/site.sqlite`
+
+---
+
+# รอบ 2 — ใช้ skill `opencode` (call ข้าม harness)
+
+> 2026-09-25 · Harness: Claude Code + OpenCode (headless one-shot 1 ครั้ง) · Branch: `lab-05-backend` · Ceiling: 20 turns (นับใหม่)
+
+## Done criteria
+
+1. `npm run test:labs` เขียว — ✅ (ตั้งแต่ turn 1)
+2. ส่งฟอร์ม guestbook บน localhost ได้ → รอบนี้ทำให้**ทดสอบซ้ำได้อัตโนมัติ** (e2e) · contact = 410/301 (D13)
+3. ปิดช่องว่างรอบ 1 เท่าที่อยู่ใน ownership: G1 → ส่ง OpenCode · G2 → Claude แก้
+
+## Turns used
+
+| Turn | งาน |
+|---|---|
+| 1 | ตรวจสถานะ: `lab-05-backend` สะอาด · `test:labs` 2/2 · D13 · L12–L14 |
+| 2 | เขียน `docs/_call-opencode-prompt.md` (อ่านอย่างเดียว · เขียนได้ไฟล์เดียว `docs/review-swarm2-backend.md`) |
+| 3 | `opencode run` one-shot — OpenCode อ่าน DECISIONS/SWARM/API/Dockerfile · รัน `npm test` · เขียนรายงาน |
+| 4 | ตรวจว่า OpenCode แตะแค่ไฟล์รายงาน (git status) · อ่านรายงาน |
+| 5 | ยืนยันคำอ้างกับโค้ด (`guestbook.ts:50-51` XFF ตัวแรก · `:74` ไม่มีเพดาน body) · ลบไฟล์ prompt ชั่วคราว |
+| 6 | Handoff `docs/handoffs/05d-claude-to-opencode.md` — L12 ทาง A (`TRUST_PROXY=1` ใน Coolify env · ใช้ XFF ตัวท้ายสุด) + เพดาน body 10KB |
+| 7 | อ่าน e2e เดิม + markup ฟอร์ม |
+| 8 | `playwright/guestbook.spec.ts` ใหม่ 4 เคส (สำเร็จ · 429 · validate ก่อน 429 · XSS) ตามรายงาน §3 · แทนเคส contact form เดิมด้วย 301 + 410 |
+| 9 | `playwright.config.ts`: `PLAYWRIGHT_CHANNEL` (ออปชัน) ใช้ browser ที่ติดตั้งในเครื่องได้ |
+| 10 | build + server `DATA_DIR` ชั่วคราว · `test:e2e` ผ่าน Edge → **6/6 ผ่าน** |
+| 11 | ปิด server · ลบข้อมูลทดสอบ · `npm test` 29/29 · `test:labs` 2/2 |
+| 12 | อัปเดตไฟล์นี้ + STATUS / OPEN_LOOPS · commit ก่อนส่งต่อ OpenCode |
+
+**รวม 12 / 20 turns — หยุดเพราะ done ในส่วนของ Claude · ส่วน backend รอ OpenCode implement ตาม handoff**
+
+## Outcome
+
+- ✅ `test:labs` 2/2 · `npm test` 29/29 · `test:e2e` 6/6 · build ผ่าน · ไม่แก้ test เพื่อให้ผ่าน (แก้เฉพาะเคส contact ที่ขัด D3 ให้ตรง D13)
+- ✅ OpenCode รีวิวผ่าน skill `opencode` เขียนเฉพาะ `docs/review-swarm2-backend.md` — ยืนยัน G1 · API ตรง D4/D5/D9/D13 · พบเพิ่ม: ไม่มีเพดาน body
+- ✅ G2 ปิด (e2e ตรง D3) · G3 เลี่ยงได้ด้วย `PLAYWRIGHT_CHANNEL=msedge`
+
+## Gaps
+
+| ID | ช่องว่าง | Owner |
+|---|---|---|
+| G1 / L12 | XFF ปลอมข้าม rate limit + ไม่มีเพดาน body — **handoff แล้ว** `05d-claude-to-opencode.md` | OpenCode |
+| G5 | เคส XSS ใน e2e ใช้ XFF ปลอมเพื่อเลี่ยง rate limit → หลัง L12 จะ **skip** ตัวเอง (ไม่แดง) · ต้องหาวิธี seed ใหม่ (เช่น รันหลังพ้นหน้าต่าง 60s หรือ seed ผ่าน SQLite ก่อนเปิด server) | Claude (Lab 06) |
+| G4 / L14 | `stash@{0}` บน `main` ยังรอตัดสิน | human |

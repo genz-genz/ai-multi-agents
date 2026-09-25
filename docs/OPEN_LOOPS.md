@@ -3,12 +3,12 @@
 > งานค้างที่ยังไม่ปิด · ลบแถวเมื่อเสร็จ  
 > Owner = `Claude` | `OpenCode` | `human`
 
-Last updated: 2026-09-25 15:35 +07:00
+Last updated: 2026-09-25 15:50 +07:00
 
 | ID | Task | Owner | Priority | Trigger / due | Notes |
 |---|---|---|---|---|---|
-| L12 | Rate limit ข้ามได้ด้วย `x-forwarded-for` ปลอม (SWARM G1) — เชื่อ header เฉพาะเมื่อตั้ง env ว่าอยู่หลัง proxy หรือใช้ `clientAddress` เป็นหลัก | OpenCode | P1 | ก่อน Lab 08 | หลักฐาน `docs/SWARM.md` turn 5 |
-| L13 | `playwright/smoke.spec.ts` เช็กฟอร์ม contact ที่ D3 ตัดแล้ว → เขียน e2e guestbook จริง (SWARM G2) | Claude | P2 | Lab 06 | ต้อง `npx playwright install` ก่อน (G3) |
+| L12 | Rate limit ข้ามได้ด้วย `x-forwarded-for` ปลอม + ไม่มีเพดาน body — ทาง A: เชื่อ XFF ตัวท้ายสุดเฉพาะ `TRUST_PROXY=1` (ตั้งใน Coolify env) · body ≤ 10KB | OpenCode | P1 | ก่อน Lab 08 | handoff `docs/handoffs/05d-claude-to-opencode.md` · รีวิว `docs/review-swarm2-backend.md` |
+| L13 | e2e เคส XSS seed ด้วย XFF ปลอม → หลัง L12 จะ skip · หาวิธี seed ใหม่ (SWARM G5) | Claude | P3 | หลัง L12 · Lab 06 | `playwright/guestbook.spec.ts` |
 | L14 | `stash@{0}` = งาน OpenCode บน `main` (db.ts อีกชุด · SWARM/STATUS/OPEN_LOOPS · `opencode.json`) — ทิ้งหรือดึงบางไฟล์กลับ | human | P2 | ก่อน merge | SWARM G4 |
 | L8 | Warm-up หลัง deploy: เพิ่ม `HEALTHCHECK` ใน `Dockerfile` ยิง `/` ด้วย `node -e "fetch(...)"` (image อาจไม่มี curl) → คนแรกหลัง restart เห็นการ์ดเพลง · ไม่ใช้ webhook/secret | Claude | P3 | Lab 08 | human เลือกทางเลือก 1 (2026-09-25) · ที่มา `docs/handoffs/05c-opencode-to-claude.md` · **D12: หน้าแรกไม่ใช้ชาร์ตแล้ว → อาจไม่ต้องทำ (ปิดพร้อม L11)** |
 | L11 | `src/lib/music.ts` + `tests/music.test.ts` ไม่มีหน้าไหนเรียกแล้วหลัง D12 → เก็บไว้เผื่อใช้ หรือลบ (ถ้าลบ L8 ปิดได้เลย) | human → OpenCode | P3 | ก่อน Lab 08 | ไฟล์เป็นของ OpenCode · Claude ไม่ลบเอง |
