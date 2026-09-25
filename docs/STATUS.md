@@ -3,7 +3,7 @@
 > อ่านทุก session · **สั้น** · single-writer ต่อรอบ  
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 13:51 +07:00  
+Last updated: 2026-09-25 14:35 +07:00  
 Updated by: Claude
 
 ## Current goal
@@ -12,6 +12,7 @@ Updated by: Claude
 
 ## Done
 
+- **D11 player ในการ์ดเพลง** (Claude): Apple Music embed (iframe) ใน `index.astro` · `src/lib/embed.ts` แปลงลิงก์ชาร์ตเป็น `embed.music.apple.com` (ไม่ใช้ API · ไม่แตะ `music.ts`) · ลิงก์ "ฟังต่อบน Apple Music ↗" ยังอยู่ · `npm test` 32/32 + build ผ่าน · build จริงกด Play แล้วเล่นในหน้าได้ · 360px ไม่ล้น
 - **L9 / Lab 04 UI เสร็จ** (Claude · `2a3063e`): 3 หน้าเมนูไทย (`/interests` `/contact` → 301) · หน้าแรก headline/tagline/ประโยคสุ่ม/การ์ดเพลง · หน้าทักทาย (limit + microcopy + `textContent`) · ธีมขาว my-ci · `npm test` 29/29 · build ผ่าน · 360px ไม่ล้น · สัญญา API ตรวจโดย OpenCode → `docs/fe-be-contract-check.md`
 - **L5 / Lab 02 เสร็จ** (2026-09-25): `docs/DEBATE.md` 3 มุม + `docs/DECISIONS.md` D1–D10 · human เลือก: 3 หน้าเมนูไทย · ตัดฟอร์ม Contact · rate limit IP ใน memory · เจ้าของลบข้อความเองภายใน 24 ชม. · PROFILE เพิ่ม `## Tagline`
 - **L7 ปิด** (2026-09-25): ชาร์ตว่างเข้า backoff (OpenCode `f36b393`) · Claude ยืนยันว่า Astro โหลด page แบบ lazy จึงทำ boot warm-up ใน app ไม่ได้ · human เลือกยอมรับไปก่อน → แก้ตอน deploy (L8)
