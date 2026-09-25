@@ -7,7 +7,7 @@ Last updated: 2026-09-25 12:00 +07:00
 
 | ID | Task | Owner | Priority | Trigger / due | Notes |
 |---|---|---|---|---|---|
-| L6 | `getRandomSong()`: เมื่อ cache หมดอายุและ Apple ล่ม ทุก request จะยิง fetch ใหม่และรอ timeout 3s → หน้าแรกช้าทุกครั้ง · ควรเลื่อนเวลารีเฟรช (backoff) หลังล้ม + รวม fetch ที่ซ้อนกัน | OpenCode | P2 | Lab 05 | พบตอน Claude review `9297a3e` · ยังใช้งานได้ ไม่พัง |
+| L6 | `getRandomSong()` ทำให้หน้าแรกรอ + การ์ดหายตอน cold start (dev log `/` 3024–3045ms ชน timeout 3s) → warm-up · stale-while-revalidate · รอ ≤1s เมื่อไม่มี cache · single-flight · backoff | OpenCode | P1 | ตอนนี้ | สเปก `docs/handoffs/05b-claude-to-opencode.md` · ผู้ใช้เจอการ์ดไม่ขึ้นจริง |
 | L5 | ย้ายข้อเสนอใน `## Brainstorm` เข้า debate → `DECISIONS.md` | Claude | P1 | Lab 02 | ตอนนี้ยังเป็น proposed |
 
 ## ปิดแล้ว (ย่อ — ย้ายหรือลบได้เมื่อรก)

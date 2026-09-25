@@ -3,7 +3,7 @@
 > อ่านทุก session · **สั้น** · single-writer ต่อรอบ  
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 12:06 +07:00  
+Last updated: 2026-09-25 12:20 +07:00  
 Updated by: Claude
 
 ## Current goal
@@ -20,7 +20,7 @@ Updated by: Claude
 
 ## In progress
 
-- —
+- L6 ส่ง OpenCode แล้ว → `docs/handoffs/05b-claude-to-opencode.md` (การ์ดเพลงหายตอน cold start)
 
 ## Blocked
 
@@ -29,7 +29,7 @@ Updated by: Claude
 ## Next actions
 
 1. Lab 02: ย้ายข้อเสนอจาก `## Brainstorm` ไป debate → ปิดเป็น D-id ใน `DECISIONS.md` (L5)
-2. OpenCode: backoff เมื่อ Apple ล่ม (L6 · P2)
+2. OpenCode: L6 — หน้าแรกไม่รอ Apple + การ์ดขึ้นตั้งแต่คนแรก (P1)
 
 ## Files changed in latest session
 
