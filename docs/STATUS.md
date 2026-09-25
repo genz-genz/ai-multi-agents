@@ -3,8 +3,8 @@
 > อ่านทุก session · **สั้น** · single-writer ต่อรอบ  
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 12:30 +07:00  
-Updated by: OpenCode
+Last updated: 2026-09-25 13:29 +07:00  
+Updated by: Claude
 
 ## Current goal
 
@@ -12,6 +12,7 @@ Updated by: OpenCode
 
 ## Done
 
+- **L7 ปิด** (2026-09-25): ชาร์ตว่างเข้า backoff (OpenCode `f36b393`) · Claude ยืนยันว่า Astro โหลด page แบบ lazy จึงทำ boot warm-up ใน app ไม่ได้ · human เลือกยอมรับไปก่อน → แก้ตอน deploy (L8)
 - Lab 01 เสร็จ: `docs/PROFILE.md` ครบโครง + `## Brainstorm`
 - **L3 เพลงสุ่ม ฝั่ง server เสร็จ** (OpenCode · 2026-09-25): `src/lib/music.ts` — cache TTL 1 ชม. · stale-on-error · timeout 3s · validate `music.apple.com` URL · ไม่ throw (พัง = `null`) · `npm test` 15/15 + `npm run build` ผ่าน · สเปก/สัญญาใน `docs/handoffs/05-claude-to-opencode.md` · ส่งกลับที่ `docs/handoffs/05-opencode-to-claude.md`
 - **L3 UI เสร็จ** (Claude): การ์ด "เพลงสุ่มวันนี้" ใน `src/pages/index.astro` · `null` = ซ่อนการ์ด · localhost ตอบ 200 และแสดงเพลงจริง
@@ -22,16 +23,16 @@ Updated by: OpenCode
 
 ## In progress
 
-- **L7 (ข้อ 1 boot warm-up) หยุดตามเงื่อนไข handoff** — พิสูจน์แล้วไม่มีกลไกในขอบเขตที่รันโค้ดตอน prod boot: middleware โหลด lazy (โค้ด build line 2194 + วัดจริง req1 card=no 2/2 รอบ) · ไม่มี integration boot hook · `inlineDynamicImports` ถูก rolldown reject → revert แล้ว · รอ human/Claude เลือกทางเลือก 1–4 ใน `docs/handoffs/05c-opencode-to-claude.md`
+- —
 
 ## Blocked
 
-- L7 ข้อ 1 — บล็อกที่แพลตฟอร์ม (ไม่ใช่บั๊กโค้ด) ต้องมี decision ก่อนทำต่อ
+- —
 
 ## Next actions
 
-1. Lab 02: ย้ายข้อเสนอจาก `## Brainstorm` ไป debate → ปิดเป็น D-id ใน `DECISIONS.md` (L5 · ฝั่ง Claude)
-2. Human/Claude: เลือกทางแก้ L7 ข้อ 1 (ยอมรับพฤติกรรมปัจจุบัน / warm curl หลัง deploy / persist ชาร์ตลง disk / อื่น ๆ) → ถ้าเลือก persist ให้เข้า debate เป็น D-id ก่อน
+1. Lab 02: ย้ายข้อเสนอจาก `## Brainstorm` ไป debate → ปิดเป็น D-id ใน `DECISIONS.md` (L5 · Claude)
+2. Lab 08: `HEALTHCHECK` ยิง `/` เพื่อ warm การ์ดเพลงหลัง deploy (L8)
 
 ## Files changed in latest session
 
