@@ -120,6 +120,11 @@ function refresh(): Promise<Song[] | null> | null {
         cache = { songs, fetchedAt: Date.now() };
         return songs;
       }
+      // Empty chart = failure: back off instead of re-hitting Apple on every
+      // request. Any stale cache stays untouched for stale-on-error serving.
+      if (gen === generation) {
+        nextAttemptAt = Date.now() + BACKOFF_MS;
+      }
       return null;
     } catch {
       if (gen === generation) {
@@ -165,7 +170,15 @@ export function __resetForTest(): void {
   nextAttemptAt = 0;
 }
 
-// Warm-up: kick off the first fetch as soon as this module is imported so
-// the very first visitor is likely to hit a populated cache. refresh()
-// never rejects, so this cannot produce an unhandled rejection.
-void refresh();
+/**
+ * Explicit warm-up entry point — single-flight and never rejects. Called by
+ * any code that wants to start the chart fetch early (e.g. at boot). Safe to
+ * call repeatedly: refresh() deduplicates concurrent calls.
+ */
+export function warmUpChart(): void {
+  void refresh();
+}
+
+// Warm-up on plain module import too (dev server / any direct importer).
+// refresh() never rejects, so this cannot produce an unhandled rejection.
+void warmUpChart();

@@ -93,10 +93,37 @@ describe('getRandomSong', () => {
     expect(await music.getRandomSong()).toBeNull();
   });
 
-  it('returns null when results are empty', async () => {
-    const { music } = await loadFresh((m) => m.mockResolvedValue(okChart([])));
+  it('returns null when results are empty and backs off like a failure', async () => {
+    vi.useFakeTimers();
+    const { music, fetchMock } = await loadFresh((m) => m.mockResolvedValue(okChart([])));
 
     expect(await music.getRandomSong()).toBeNull();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    fetchMock.mockClear();
+
+    expect(await music.getRandomSong()).toBeNull(); // inside backoff: no new fetch, no wait
+    expect(fetchMock).toHaveBeenCalledTimes(0);
+
+    vi.advanceTimersByTime(BACKOFF_ms + 1000);
+    fetchMock.mockResolvedValue(okChart([SONG_A]));
+    expect(await music.getRandomSong()).toEqual(mappedA);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not clobber stale cache when a refresh returns an empty chart', async () => {
+    vi.useFakeTimers();
+    const { music, fetchMock } = await loadFresh((m) => m.mockResolvedValue(okChart([SONG_A])));
+
+    expect(await music.getRandomSong()).toEqual(mappedA);
+
+    vi.advanceTimersByTime(TTL_ms + 61 * 60 * 1000);
+    fetchMock.mockResolvedValue(okChart([])); // refresh succeeds but empty
+    expect(await music.getRandomSong()).toEqual(mappedA); // stale answer, immediately
+    expect(fetchMock).toHaveBeenCalledTimes(2); // background refresh did run
+
+    fetchMock.mockClear();
+    expect(await music.getRandomSong()).toEqual(mappedA); // backoff: cache keeps serving
+    expect(fetchMock).toHaveBeenCalledTimes(0);
   });
 
   it('drops items that fail validation (bad url, empty fields)', async () => {

@@ -3,11 +3,11 @@
 > งานค้างที่ยังไม่ปิด · ลบแถวเมื่อเสร็จ  
 > Owner = `Claude` | `OpenCode` | `human`
 
-Last updated: 2026-09-25 12:20 +07:00
+Last updated: 2026-09-25 12:30 +07:00
 
 | ID | Task | Owner | Priority | Trigger / due | Notes |
 |---|---|---|---|---|---|
-| L7 | เพลงสุ่ม: warm-up ตอน server boot จริง (ตอนนี้เริ่มที่ request แรก → คนแรกหลัง restart ไม่เห็นการ์ด) + ชาร์ตว่างต้องเข้า backoff | OpenCode | P2 | ตอนนี้ | สเปก `docs/handoffs/05c-claude-to-opencode.md` · Claude วัด build จริง req1 1.25s card=no |
+| L7 | เพลงสุ่ม: **ข้อ 2 เสร็จ** (ชาร์ตว่าง → backoff 60s · `npm test` 26/26) · **ข้อ 1 (boot warm-up) ทำไม่ได้ภายในขอบเขต** — middleware โหลด lazy ตอน request แรก (พิสูจน์ด้วยโค้ด build + วัดจริง 2/2 รอบ) · adapter/integration ไม่มี prod boot hook · `inlineDynamicImports` ถูก rolldown reject → หยุดตามเงื่อนไข | human | P2 | ตัดสินใจทางเลือก 1–4 ใน `docs/handoffs/05c-opencode-to-claude.md` | warm-up ที่มี (import-time) ทำงานถูก แต่ไม่มี head start · req1 หลัง restart = 1.27s card=no · req2 มีการ์ด |
 | L5 | ย้ายข้อเสนอใน `## Brainstorm` เข้า debate → `DECISIONS.md` | Claude | P1 | Lab 02 | ตอนนี้ยังเป็น proposed |
 
 ## ปิดแล้ว (ย่อ — ย้ายหรือลบได้เมื่อรก)
