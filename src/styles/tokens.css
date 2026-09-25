@@ -36,7 +36,7 @@
   --ci-text-on-primary: #FFFFFF;
 
   --ci-danger:  #DC2626;
-  --ci-success: #16A34A;
+  --ci-success: #15803D;   /* my-ci #16A34A is 3.30:1 on white — darker for AA text */
 
   --ci-font-sans: 'LINE Seed Sans TH', 'Noto Sans Thai', 'Segoe UI', system-ui,
                   -apple-system, sans-serif;
