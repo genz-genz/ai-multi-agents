@@ -7,6 +7,7 @@ Last updated: 2026-09-25 12:20 +07:00
 
 | ID | Task | Owner | Priority | Trigger / due | Notes |
 |---|---|---|---|---|---|
+| L7 | เพลงสุ่ม: warm-up ตอน server boot จริง (ตอนนี้เริ่มที่ request แรก → คนแรกหลัง restart ไม่เห็นการ์ด) + ชาร์ตว่างต้องเข้า backoff | OpenCode | P2 | ตอนนี้ | สเปก `docs/handoffs/05c-claude-to-opencode.md` · Claude วัด build จริง req1 1.25s card=no |
 | L5 | ย้ายข้อเสนอใน `## Brainstorm` เข้า debate → `DECISIONS.md` | Claude | P1 | Lab 02 | ตอนนี้ยังเป็น proposed |
 
 ## ปิดแล้ว (ย่อ — ย้ายหรือลบได้เมื่อรก)

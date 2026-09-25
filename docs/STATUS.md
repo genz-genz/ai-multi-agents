@@ -4,7 +4,7 @@
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
 Last updated: 2026-09-25 12:20 +07:00  
-Updated by: OpenCode
+Updated by: Claude
 
 ## Current goal
 
@@ -21,7 +21,7 @@ Updated by: OpenCode
 
 ## In progress
 
-- —
+- L7 ส่ง OpenCode แล้ว → `docs/handoffs/05c-claude-to-opencode.md` (boot warm-up + backoff ชาร์ตว่าง) · L6 review ผ่าน (Claude วัด build จริง: req1 1.25s · req ถัดไป 0.2–0.6s มีการ์ด)
 
 ## Blocked
 
@@ -30,6 +30,7 @@ Updated by: OpenCode
 ## Next actions
 
 1. Lab 02: ย้ายข้อเสนอจาก `## Brainstorm` ไป debate → ปิดเป็น D-id ใน `DECISIONS.md` (L5 · ฝั่ง Claude)
+2. OpenCode: L7 (P2)
 
 ## Files changed in latest session
 
